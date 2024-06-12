@@ -1,0 +1,250 @@
+55. 
+*Algorithm:
+->Initialize two pointers, i and j, to the start of the array.
+->Iterate through the array using j. If the current element is not equal to the value to be removed (val), move it to the position i and increment both i and j.
+->Continue this process until j reaches the end of the array.
+->The new length of the array is i, which is the position after the last element that is not equal to val.
+->Return i as the new length of the array.
+*Program:
+def removeElement(nums, val):
+    i = 0
+    for j in range(len(nums)):
+        if nums[j] != val:
+            nums[i] = nums[j]
+            i += 1
+    return i
+ 
+
+
+************************************************************************************************************************************
+
+56. 
+*Algorithm:
+->Initialize the Board: Read the Sudoku board from a file or input. Initialize an empty list to store the solved board.
+->Fill the Board: Iterate through each cell in the board. If the cell is empty (represented by '.'), use a backtracking algorithm to fill it with a valid number.
+->Backtracking Algorithm:
+Check for Valid Numbers: For each empty cell, check if the number from 1 to 9 can be placed in the cell without violating the Sudoku rules.
+Place the Number: If a valid number is found, place it in the cell and recursively fill the rest of the board.
+Backtrack: If a cell cannot be filled with a valid number, backtrack by removing the last placed number and trying another number.
+->Check for Completion: After filling the board, check if all cells are filled and the Sudoku rules are satisfied.
+->Return the Solved Board: If the board is solved, return the solved board. If not, return an error message.
+ *Program:
+def solve_sudoku(board):
+    def is_valid(board, row, col, num):
+        for i in range(9):
+            if board[row][i] == str(num):
+                return False
+        for i in range(9):
+            if board[i][col] == str(num):
+                return False
+        start_row = row - row % 3
+        start_col = col - col % 3
+        for i in range(3):
+            for j in range(3):
+                if board[i + start_row][j + start_col] == str(num):
+                    return False
+        return True
+
+    def solve(board):
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == '.':
+                    for num in range(1, 10):
+                        if is_valid(board, i, j, num):
+                            board[i][j] = str(num)
+                            if solve(board):
+                                return True
+                            board[i][j] = '.'
+                    return False
+        return True
+
+    if solve(board):
+        return board
+    else:
+        return None
+
+# Example usage:
+board = [
+    ["5", "3", ".", ".", "7", ".", ".", ".", "."],
+    ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+    [".", "9", "8", ".", ".", ".", ".", "6", "."],
+    ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+    ["4", ".", ".", "8", ".", "3", ".", ".", "1"],
+    ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+    [".", "6", ".", ".", ".", ".", "2", "8", "."],
+    [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+    [".", ".", ".", ".", "8", ".", ".", "7", "9"]
+]
+
+solved_board = solve_sudoku(board)
+for row in solved_board:
+    print(row)
+
+
+************************************************************************************************************************************
+
+
+
+57.
+*Algorithm:
+->Base Case: Initialize the sequence with the first term, "1".
+->Recursive Step: For each subsequent term, split the previous term into substrings of unique digits.
+->Count and Say: For each substring, count the number of digits and append it to the result. Then, append the digit itself.
+->Concatenate: Combine the results from each substring to form the new term.
+->Repeat: Repeat steps 2-4 until the desired term is reached.
+*Program:
+def countAndSay(n):
+    def next_number(s):
+        result = []
+        i = 0
+        while i < len(s):
+            count = 1
+            while i + 1 < len(s) and s[i] == s[i + 1]:
+                i += 1
+                count += 1
+            result.append(str(count) + s[i])
+            i += 1
+        return ''.join(result)
+
+    s = "1"
+    for _ in range(n - 1):
+        s = next_number(s)
+    return s
+
+# Example usage:
+print(countAndSay(4))  # Output: "1211"
+
+
+
+************************************************************************************************************************************
+
+58.
+*Algorithm:
+->Base Case: Initialize the sequence with the first term, "1".
+->Recursive Step: For each subsequent term, split the previous term into substrings of unique digits.
+->Count and Say: For each substring, count the number of digits and append it to the result. Then, append the digit itself.
+->Concatenate: Combine the results from each substring to form the new term.
+->Repeat: Repeat steps 2-4 until the desired term is reached.
+*Program:
+def countAndSay(n):
+    def next_number(s):
+        result = []
+        i = 0
+        while i < len(s):
+            count = 1
+            while i + 1 < len(s) and s[i] == s[i + 1]:
+                i += 1
+                count += 1
+            result.append(str(count) + s[i])
+            i += 1
+        return ''.join(result)
+
+    s = "1"
+    for _ in range(n - 1):
+        s = next_number(s)
+    return s
+
+# Example usage:
+print(countAndSay(4))  # Output: "1211"
+
+
+************************************************************************************************************************************
+
+59.
+*Algorithm:
+->Sort the Candidates: Sort the candidate numbers in ascending order to handle duplicates easily.
+->Recursive Backtracking: Define a recursive function to explore all possible combinations. Start with an empty combination and add numbers from the candidates one by one.
+->Check for Valid Combinations: Check if the current combination adds up to the target. If it does, add it to the result list. If not, continue exploring combinations with the remaining numbers.
+->Avoid Duplicates: Skip over duplicate numbers to prevent generating duplicate combinations.
+->Return the Result: Return the list of all unique combinations that sum up to the target.
+*program:
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        candidates.sort()
+        result = []
+        def backtrack(curr_combination, remaining_nums, target_sum):
+            if target_sum == 0:
+                result.append(curr_combination)
+                return
+            for i in range(len(remaining_nums)):
+                if i > 0 and remaining_nums[i] == remaining_nums[i-1]:
+                    continue
+                if remaining_nums[i] > target_sum:
+                    break
+                backtrack(curr_combination + [remaining_nums[i]], remaining_nums[i+1:], target_sum - remaining_nums[i])
+        backtrack([], candidates, target)
+        return result
+
+
+************************************************************************************************************************************ 
+ 
+60.
+*Algorithm:
+->Sort the input array: Sort the input array to ensure that duplicate elements are adjacent.
+->Use backtracking: Use backtracking to generate all permutations.
+->Skip duplicates: Skip duplicate elements to avoid generating duplicate permutations.
+->Add to result: Add each generated permutation to the result.
+->Return result: Return the list of all unique permutations.
+*Program:
+def permuteUnique(nums):
+    def backtrack(start, end):
+        if start == end:
+            result.append(nums[:])
+        for i in range(start, end):
+            if nums[i] in nums[start:i]:
+                continue
+            nums[start], nums[i] = nums[i], nums[start]
+            backtrack(start + 1, end)
+            nums[start], nums[i] = nums[i], nums[start]
+
+    result = []
+    nums.sort()
+    backtrack(0, len(nums))
+    return result
+
+
+************************************************************************************************************************************
+
+
+61. 
+*Algorithm:
+->Initialize variables: Initialize variables to keep track of the maximum sum and the current sum.
+->Iterate through the array: Iterate through the array, updating the current sum and checking if it is greater than the maximum sum.
+->Update maximum sum: Update the maximum sum if the current sum is greater.
+->Reset current sum: Reset the current sum if it becomes negative.
+->Return maximum sum: Return the maximum sum as the result.
+*Program:
+def maxSubArray(nums):
+    max_sum = current_sum = nums[0]
+    for num in nums[1:]:
+        current_sum = max(num, current_sum + num)
+        max_sum = max(max_sum, current_sum)
+    return max_sum
+
+
+
+***********************************************************************************************************************************
+
+
+62.
+*Algorithm:
+->Calculate factorial: Calculate the factorial of  n, which is the total number of permutations.
+->Divide k by factorial: Divide k by the factorial of the current number to determine the position of the current number in the permutation.
+->Update 𝑘 and permutation: Update 𝑘 and the permutation by subtracting the factorial and appending the current number.
+->Repeat until k is 0: Repeat steps 2-3 until k is 0.
+->Return permutation: Return the permutation sequence.
+*Program:
+def getPermutation(n, k):
+    nums = [str(i) for i in range(1, n + 1)]
+    permutation = ''
+    k -= 1
+    for i in range(n, 0, -1):
+        fact = math.factorial(i - 1)
+        index = k // fact
+        k %= fact
+        permutation += nums[index]
+        nums.pop(index)
+    return permutation
+
+
+************************************************************************************************************************************
