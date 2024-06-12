@@ -1,0 +1,296 @@
+1.  Counting Elements 
+Given an integer array arr, count how many elements x there are, such that x + 1 is also in 
+arr. If there are duplicates in arr, count them separately.
+
+ALGORITHM:
+->Initialize a set seen to store unique elements from the array arr.
+->Iterate over each element x in arr.
+->Check if x + 1 is present in seen. If it is, increment a counter count.
+-> Update seen by adding x to it.
+->Return the count of elements x such that x + 1 is also in arr.
+
+PROGRAM:
+def count_elements(arr):
+    seen = set()
+    count = 0
+    for x in arr:
+        if x + 1 in seen:
+            count += 1
+        seen.add(x)
+    return count
+
+************************************************************************************************************************************************************************************************************************************************************************
+
+2.  Perform String Shifts 
+You are given a string s containing lowercase English letters, and a matrix shift, 
+where shift[i] = [directioni, amounti]: 
+● directioni can be 0 (for left shift) or 1 (for right shift). 
+● amounti is the amount by which string s is to be shifted. 
+● A left shift by 1 means remove the first character of s and append it to the end. 
+● Similarly, a right shift by 1 means remove the last character of s and add it to 
+the beginning. 
+Return the final string after all operations.
+
+ALGORITHM:
+->Initialize an empty string result to store the final string after all shifts.
+->Iterate over each shift operation in the matrix shift.
+->Extract the direction direction and amount amount from the current shift operation.
+->Perform the shift operation on the string s. If direction is 0 (left shift), remove the first amount characters from s and append them to the end. If direction is 1 (right shift), remove the last amount characters from s and add them to the beginning.
+->Update s with the result of the shift operation and update result with the new value of s.
+
+PROGRAM:
+def string_shift(s, shift):
+    direction = shift[0][0]
+    amount = shift[0][1]
+    if direction == 0:
+        return s[amount:] + s[:amount]
+    else:
+        return s[-amount:] + s[:-amount]
+
+************************************************************************************************************************************************************************************************************************************************************************
+
+3. Leftmost Column with at Least a One 
+A row-sorted binary matrix means that all elements are 0 or 1 and each row of the matrix 
+is sorted in non-decreasing order. 
+Given a row-sorted binary matrix binaryMatrix, return the index (0-indexed) of the 
+leftmost column with a 1 in it. If such an index does not exist, return -1. 
+You can't access the Binary Matrix directly. You may only access the matrix using a 
+BinaryMatrix interface: 
+● BinaryMatrix.get(row, col) returns the element of the matrix at index (row, col) 
+(0-indexed). 
+● BinaryMatrix.dimensions() returns the dimensions of the matrix as a list of 2 
+elements [rows, cols], which means the matrix is rows x cols. 
+Submissions making more than 1000 calls to BinaryMatrix.get will be judged Wrong 
+Answer. Also, any solutions that attempt to circumvent the judge will result in 
+disqualification. 
+For custom testing purposes, the input will be the entire binary matrix mat. You will not 
+have access to the binary matrix directly.
+
+ALGORITHM:
+->Initialize the result as -1 to indicate no 1 found yet.
+->Iterate over each row of the matrix. For each row, perform a binary search to find the leftmost index with a 1.
+->After the binary search, check if the leftmost index contains a 1. If it does, update the result if it is the first 1 found or if the current index is smaller than the previous one.
+->If the result is still -1 after checking all rows, return -1. Otherwise, return the result as the index of the leftmost column with a 1.
+->Return the result.
+
+PROGRAM:
+class Solution:
+    def leftMostColumnWithOne(self, binaryMatrix: 'BinaryMatrix') -> int:
+        rows, cols = binaryMatrix.dimensions()
+        result = -1
+        for row in range(rows):
+            left, right = 0, cols - 1
+            while left <= right:
+                mid = (left + right) // 2
+                if binaryMatrix.get(row, mid) == 1:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            if binaryMatrix.get(row, left) == 1:
+                result = left if result == -1 else min(result, left)
+        return result
+
+************************************************************************************************************************************************************************************************************************************************************************
+
+4. First Unique Number 
+You have a queue of integers, you need to retrieve the first unique integer in the queue. 
+Implement the FirstUnique class: 
+● FirstUnique(int[] nums) Initializes the object with the numbers in the queue. 
+● int showFirstUnique() returns the value of the first unique integer of the queue, 
+and returns -1 if there is no such integer. 
+● void add(int value) insert value to the queue.
+
+ALGORITHM:
+->Initialize two dictionaries, count and queue, to store the count of each number in the queue and the queue itself, respectively.
+-> When a new value is added to the queue, increment its count in count and add it to queue.
+->Iterate over queue. For each number, check if its count in count is 1. If it is, return the number. If no unique number is 
+found, return -1.
+
+PROGRAM:
+class FirstUnique:
+    def __init__(self, nums):
+        self.count = {}
+        self.queue = []
+        for num in nums:
+            self.count[num] = self.count.get(num, 0) + 1
+            if self.count[num] == 1:
+                self.queue.append(num)
+
+    def showFirstUnique(self):
+        while self.queue and self.count[self.queue[0]] > 1:
+            self.queue.pop(0)
+        return self.queue[0] if self.queue else -1
+
+    def add(self, value):
+        self.count[value] = self.count.get(value, 0) + 1
+        if self.count[value] == 1:
+            self.queue.append(value)
+
+************************************************************************************************************************************************************************************************************************************************************************
+
+5. Check If a String Is a Valid Sequence from Root to Leaves Path in a Binary Tree 
+Given a binary tree where each path going from the root to any leaf form a valid 
+sequence, check if a given string is a valid sequence in such binary tree.  
+We get the given string from the concatenation of an array of integers arr and the 
+concatenation of all values of the nodes along a path results in a sequence in the given 
+binary tree.
+
+ALGORITHM:
+-> Initialize a variable index to 0, which will keep track of the current position in the given sequence arr.
+->Define a recursive DFS function dfs that takes a tree node node and the current index as parameters. If the current node is None or its value does not match the value at the current index in the sequence, return False.
+-> If the current node is a leaf node (i.e., it has no children), check if the current index is at the end of the sequence. If it is, return True. Otherwise, return False.
+-> If the current node is not a leaf, recursively call dfs on its left and right children, incrementing the index by 1 each time. If either of these recursive calls returns True, return True. Otherwise, return False.
+-> Call the dfs function on the root node of the tree with the initial index set to 0. If the function returns True, the given sequence is a valid sequence in the binary tree.
+
+PROGRAM:
+class Solution:
+    def isValidSequence(self, root: TreeNode, arr: List[int]) -> bool:
+        def dfs(node, index):
+            if node is None or node.val != arr[index]:
+                return False
+            if index == len(arr) - 1:
+                return node.left is None and node.right is None
+            return dfs(node.left, index + 1) or dfs(node.right, index + 1)
+
+        return dfs(root, 0)
+
+************************************************************************************************************************************************************************************************************************************************************************
+
+6.  Kids With the Greatest Number of Candies 
+There are n kids with candies. You are given an integer array candies, where each 
+candies[i] represents the number of candies the ith kid has, and an integer extraCandies, 
+denoting the number of extra candies that you have. 
+Return a boolean array result of length n, where result[i] is true if, after giving the ith kid 
+all the extraCandies, they will have the greatest number of candies among all the kids, or 
+false otherwise. 
+Note that multiple kids can have the greatest number of candies.
+
+ALGORITHM:
+->Find the Maximum Number of Candies: Initialize a variable maxCandies to the maximum value in the candies array. This represents the maximum number of candies any kid currently has.
+->Check for Greatest Number of Candies: Iterate through each kid in the candies array. For each kid, add extraCandies to their current number of candies and compare it with maxCandies. If the sum is greater than or equal to maxCandies, set result[i] to True, indicating that the kid can have the greatest number of candies after receiving the extra candies. Otherwise, set result[i] to False.
+
+PROGRAM:
+class Solution:
+    def kidsWithCandies(self, candies: List[int], extraCandies: int) -> List[bool]:
+        n = len(candies)
+        result = [False] * n
+        maxCandies = max(candies)
+        for i in range(n):
+            if candies[i] + extraCandies >= maxCandies:
+                result[i] = True
+        return result
+
+************************************************************************************************************************************************************************************************************************************************************************
+
+7. Max Difference You Can Get From Changing an Integer 
+You are given an integer num. You will apply the following steps exactly two times: 
+● Pick a digit x (0 <= x <= 9). 
+● Pick another digit y (0 <= y <= 9). The digit y can be equal to x. 
+● Replace all the occurrences of x in the decimal representation of num by y. 
+● The new integer cannot have any leading zeros, also the new integer cannot be 0. 
+Let a and b be the results of applying the operations to num the first and second times, 
+respectively. 
+Return the max difference between a and b. 
+
+ALGORITHM:
+->Find the Maximum and Minimum Digits: Initialize two variables maxDigit and minDigit to the maximum and minimum digits in the decimal representation of num, respectively.
+->Calculate the Maximum Difference: Calculate the maximum difference between num and the result of replacing all occurrences of maxDigit with minDigit and vice versa. This difference represents the maximum difference that can be achieved by applying the operations exactly two times.
+
+PROGRAM:
+class Solution:
+    def maxDiff(self, num: int) -> int:
+        num_str = str(num)
+        max_digit = max(int(digit) for digit in num_str)
+        min_digit = min(int(digit) for digit in num_str)
+        return int(num_str.replace(str(max_digit), str(min_digit)) - num_str.replace(str(min_digit), str(max_digit)) + num_str.replace(str(min_digit), str(max_digit)))
+
+************************************************************************************************************************************************************************************************************************************************************************
+
+8. Check If a String Can Break Another String 
+Given two strings: s1 and s2 with the same size, check if some permutation of string s1 
+can break some permutation of string s2 or vice-versa. In other words s2 can break s1 or 
+vice-versa. 
+A string x can break string y (both of size n) if x[i] >= y[i] (in alphabetical order) for all i 
+between 0 and n-1. 
+
+ALGORITHM:
+->Sort the Strings: Sort both strings s1 and s2 in alphabetical order.
+->Check Breaking Condition: Iterate over the sorted strings and check if each character of s1 is greater than or equal to the corresponding character of s2 or vice versa.
+->Return Result: If the breaking condition is satisfied for all characters, return True. Otherwise, return False.
+
+PROGRAM:
+class Solution:
+    def checkIfCanBreak(self, s1: str, s2: str) -> bool:
+        s1_sorted = sorted(s1)
+        s2_sorted = sorted(s2)
+        
+        can_break_s1 = all(x >= y for x, y in zip(s1_sorted, s2_sorted))
+        can_break_s2 = all(x >= y for x, y in zip(s2_sorted, s1_sorted))
+        
+        return can_break_s1 or can_break_s2
+
+************************************************************************************************************************************************************************************************************************************************************************
+
+9. Number of Ways to Wear Different Hats to Each Other 
+There are n people and 40 types of hats labeled from 1 to 40. 
+Given a 2D integer array hats, where hats[i] is a list of all hats preferred by the ith person. 
+Return the number of ways that the n people wear different hats to each other. 
+Since the answer may be too large, return it modulo 109 + 7.
+
+ALGORITHM:
+->Initialization:
+Initialize a 2D array dp of size (1 << n) x (maxHatNumber + 1) where n is the number of people and maxHatNumber is the maximum hat number.
+Initialize dp to 1, representing there is one way to assign no hats to 0 people.
+Initialize mod to 10^9 + 7.
+->Dynamic Programming:
+Iterate over all hats from 1 to maxHatNumber.
+For each hat, iterate over all possible people states represented by a bitmask mask.
+If there are people in the state mask who can wear the current hat, update dp[mask][hatNumber] by adding the number of ways to distribute hats without considering the current hat and the number of ways to distribute hats by assigning the current hat to the people in the state mask.
+->Return the Result:
+Return dp[(1 << n) - 1][maxHatNumber], which represents the total number of ways to distribute hats so that each person wears a different hat.
+
+PROGRAM:
+class Solution:
+    def numberWays(self, hats: List[List[int]]) -> int:
+        n = len(hats)
+        maxHatNumber = max(max(hat) for hat in hats)
+        mod = 10**9 + 7
+        dp = [[0] * (maxHatNumber + 1) for _ in range(1 << n)]
+        dp[0][0] = 1
+
+        for hatNumber in range(1, maxHatNumber + 1):
+            for mask in range(1 << n):
+                for person in range(n):
+                    if (mask & (1 << person)) and hatNumber in hats[person]:
+                        dp[mask][hatNumber] = (dp[mask][hatNumber] + dp[mask ^ (1 << person)][hatNumber - 1]) % mod
+
+        return dp[(1 << n) - 1][maxHatNumber]
+
+************************************************************************************************************************************************************************************************************************************************************************
+
+10. Destination City 
+You are given the array paths, where paths[i] = [cityAi, cityBi] means there exists a 
+direct path going from cityAi to cityBi. Return the destination city, that is, the city 
+without any path outgoing to another city. 
+It is guaranteed that the graph of paths forms a line without any loop, therefore, there will 
+be exactly one destination city.
+
+ALGORITHM:
+->Initialize a set: Create an empty set called outgoing_cities to store the cities that have outgoing paths.
+->Iterate over paths: For each path [cityA, cityB] in the paths list:
+Add cityA to the outgoing_cities set.
+->Iterate over paths again: For each path [cityA, cityB] in the paths list:
+Check if cityB is not in the outgoing_cities set.
+If cityB is not in the set, it means it is the destination city without any outgoing paths.
+->Return the destination city: Return cityB as the destination city.
+->End the algorithm: The algorithm terminates after finding and returning the destination city.
+
+PROGRAM:
+class Solution:
+    def destCity(self, paths: List[List[str]]) -> str:
+        outgoing_cities = set()
+        for path in paths:
+            outgoing_cities.add(path[0])
+        for path in paths:
+            if path[1] not in outgoing_cities:
+                return path[1]
