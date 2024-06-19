@@ -1,0 +1,171 @@
+6.
+ALGORITHM:
+->Identify the Root: The root of the height-balanced binary search tree (BST) should be the middle element of the sorted input array nums.
+-
+>Construct the Left Subtree: Recursively construct the left subtree by calling the same function with the left half of the input array nums.
+->Construct the Right Subtree: Recursively construct the right subtree by calling the same function with the right half of the input array nums.
+->Return the Root: Return the root node of the constructed BST.
+->Handle Base Case: If the input array nums is empty, return None to indicate the end of the recursion.
+PROGRAM:
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:
+        if not nums:
+            return None
+
+        mid = len(nums) // 2
+        root = TreeNode(nums[mid])
+        root.left = self.sortedArrayToBST(nums[:mid])
+        root.right = self.sortedArrayToBST(nums[mid+1:])
+
+        return root
+
+**************************************************************************************************************************************************************************************************
+
+7.
+ALGORITHM:
+->Sort the Array: Sort the input array nums in ascending order.
+->Initialize Two Pointers: Initialize two pointers, i and j, where i starts from the beginning of the array and j starts from the end of the array.
+->Reorder the Array: Iterate through the array, alternating between adding elements from the beginning and the end of the sorted array to the result.
+->Return the Reordered Array: Return the reordered array nums.
+->Handle Edge Cases: If the length of the array is odd, the middle element will be added to the result.
+PROGRAM:
+class Solution:
+    def wiggleSort(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        nums.sort()
+        n = len(nums)
+        i, j = 0, n - 1
+        result = [0] * n
+
+        for k in range(0, n, 2):
+            result[k] = nums[j]
+            j -= 1
+        for k in range(1, n, 2):
+            result[k] = nums[i]
+            i += 1
+
+        nums[:] = result
+
+**************************************************************************************************************************************************************************************************
+
+8.
+ALGORITHM:
+->Initialization: Initialize a variable dummy to a new node with a value of None, which will be the head of the merged linked list.
+->Merge Linked Lists: Iterate through each linked list in the input array lists. For each linked list, iterate through its nodes and compare them with the current node in the merged linked list. If the current node in the merged linked list is greater than the node from the linked list, insert the node from the linked list into the merged linked list.
+->Return the Merged Linked List: Return the merged linked list.
+PROGRAM:
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def mergeKLists(self, lists):
+        dummy = ListNode()
+        current = dummy
+
+        while True:
+            min_val = float('inf')
+            min_node = None
+            for node in lists:
+                if node and node.val < min_val:
+                    min_val = node.val
+                    min_node = node
+            if not min_node:
+                break
+
+            current.next = min_node
+            current = current.next
+            min_node = min_node.next
+
+        return dummy.next
+
+**************************************************************************************************************************************************************************************************
+
+9.
+ALGORITHM:
+->Identify the Shorter Array: Determine which of the two input arrays, nums1 or nums2, is the shorter one.
+->Binary Search: Perform a binary search on the shorter array to find the partition point that divides the combined array into two halves with equal sums.
+->Calculate the Median: Use the partition point found in the previous step to calculate the median of the combined array.
+->Handle Edge Cases: If the combined array has an odd number of elements, the median is the larger of the two elements at the partition point. If the combined array has an even number of elements, the median is the average of the two elements at the partition point.
+->Return the Median: Return the calculated median.
+PROGRAM:
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+
+        left, right = 0, len(nums1)
+
+        while left <= right:
+            partitionX = (left + right) // 2
+            partitionY = (len(nums1) + len(nums2) + 1) // 2 - partitionX
+
+            maxLeftX = nums1[partitionX - 1] if partitionX != 0 else float('-inf')
+            minRightX = nums1[partitionX] if partitionX != len(nums1) else float('inf')
+
+            maxLeftY = nums2[partitionY - 1] if partitionY != 0 else float('-inf')
+            minRightY = nums2[partitionY] if partitionY != len(nums2) else float('inf')
+
+            if maxLeftX <= minRightY and maxLeftY <= minRightX:
+                if (len(nums1) + len(nums2)) % 2 == 0:
+                    return (max(maxLeftX, maxLeftY) + min(minRightX, minRightY)) / 2
+                else:
+                    return max(maxLeftX, maxLeftY)
+            elif maxLeftX > minRightY:
+                right = partitionX - 1
+            else:
+                left = partitionX + 1
+
+**************************************************************************************************************************************************************************************************
+
+10.
+ALGORITHM:
+->Sort the Array: Sort the input array nums in ascending order.
+->Iterate Through the Array: Iterate through the array nums using four nested loops, where the outer loop iterates from a to n-3, the second loop iterates from a+1 to n-2, the third loop iterates from a+2 to n-1, and the innermost loop iterates from a+3 to n.
+->Check the Sum: For each quadruplet [nums[a], nums[b], nums[c], nums[d]], check if the sum of the elements is equal to the target. If it is, add the quadruplet to the result list.
+->Handle Duplicates: If the current element is the same as the previous element, skip it to avoid duplicates.
+->Return the Result: Return the list of all valid quadruplets.
+PROGRAM:
+class Solution:
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        nums.sort()
+        n = len(nums)
+        result = []
+
+        for a in range(n - 3):
+            if a > 0 and nums[a] == nums[a - 1]:
+                continue
+
+            for b in range(a + 1, n - 2):
+                if b > a + 1 and nums[b] == nums[b - 1]:
+                    continue
+
+                c, d = b + 1, n - 1
+                while c < d:
+                    total = nums[a] + nums[b] + nums[c] + nums[d]
+                    if total == target:
+                        result.append([nums[a], nums[b], nums[c], nums[d]])
+                        while c < d and nums[c] == nums[c + 1]:
+                            c += 1
+                        while c < d and nums[d] == nums[d - 1]:
+                            d -= 1
+                        c += 1
+                        d -= 1
+                    elif total < target:
+                        c += 1
+                    else:
+                        d -= 1
+
+        return result
+
+*******************************************************************************************************************************************************************************************************************************        *******************************************************************************************************************************************************************
