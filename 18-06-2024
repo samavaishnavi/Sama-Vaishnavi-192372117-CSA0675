@@ -1,0 +1,120 @@
+1.
+ALGORITHM:
+->Initialize a variable min_length to the length of the input array nums.
+->Iterate through the array nums from the beginning to the end.
+->For each pair of indices i and j where i < j and nums[i] < nums[j], remove the elements at these indices and update the min_length variable to the minimum of the current min_length and the length of the modified array.
+->Repeat step 3 until the entire array has been processed.
+->Return the final value of min_length.
+PROGRAM:
+def minimumLength(nums):
+    min_length = len(nums)
+    
+    for i in range(len(nums)):
+        for j in range(i+1, len(nums)):
+            if nums[i] < nums[j]:
+                new_nums = nums[:i] + nums[i+1:j] + nums[j+1:]
+                min_length = min(min_length, len(new_nums))
+    
+    return min_length
+
+**************************************************************************************************************************************************************************************************
+
+2.
+ALGORITHM:
+->Initialize an empty list result to store the substrings.
+->Iterate through each word in the input list words.
+->For each word, iterate through each other word in the list.
+->Check if the current word is a substring of the other word. If it is, add it to the result list.
+->Return the result list.
+PROGRAM:
+def find_substrings(words):
+    result = []
+    for i in range(len(words)):
+        for j in range(len(words)):
+            if i != j and words[j] in words[i]:
+                result.append(words[j])
+    return result
+
+**************************************************************************************************************************************************************************************************
+
+3.
+ALGORITHM:
+->Initialization: Create a matrix ans of the same size as the input mat, filled with -1 to represent unknown distances.
+->Queue and BFS: Create a queue q to store cells to be processed. Initialize it with all cells containing 0 in mat. Set the distance for these cells to 0.
+->BFS Loop: While q is not empty, process the next cell in the queue. For each cell, update the distances for its unvisited neighbors by incrementing the distance of the current cell.
+->Update Distances: Update the distances for all cells in ans based on the distances calculated in step 3.
+->Return Result: Return the ans matrix containing the distances of the nearest 0 for each cell.
+PROGRAM:
+from collections import deque
+
+def updateMatrix(mat):
+    m, n = len(mat), len(mat[0])
+    ans = [[-1] * n for _ in range(m)]
+    q = deque()
+
+    for i in range(m):
+        for j in range(n):
+            if mat[i][j] == 0:
+                ans[i][j] = 0
+                q.append((i, j))
+
+    dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+    while q:
+        i, j = q.popleft()
+        for di, dj in dirs:
+            ni, nj = i + di, j + dj
+            if 0 <= ni < m and 0 <= nj < n and ans[ni][nj] == -1:
+                ans[ni][nj] = ans[i][j] + 1
+                if mat[ni][nj] == 0:
+                    q.append((ni, nj))
+
+    return ans
+
+**************************************************************************************************************************************************************************************************
+
+4.
+ALGORITHM:
+Initialization: Initialize a list min_ops to store the minimum number of operations needed to make each element in arr1 strictly increasing. Initialize min_ops to 0, as no operation is needed for the first element.
+BFS Loop: Iterate over each element arr[i] in arr1. For each element, find the smallest element in arr2 that is greater than or equal to arr[i]. This is done by using a binary search in arr2.
+Update Operations: Update min_ops[i] to the minimum of its current value and the number of operations needed to make the previous element strictly increasing plus one.
+Return Result: If min_ops[-1] is still infinity, return -1, indicating that it is not possible to make arr1 strictly increasing. Otherwise, return min_ops[-1].
+PROGRAM:
+from bisect import bisect_left
+
+class Solution:
+    def makeArrayIncreasing(self, arr1, arr2):
+        arr2.sort()
+        min_ops = [float('inf')] * (len(arr1) + 1)
+        min_ops[0] = 0
+
+        for i in range(1, len(arr1) + 1):
+            idx = bisect_left(arr2, arr1[i - 1])
+            for j in range(idx, len(arr2)):
+                if arr2[j] > arr1[i - 1]:
+                    min_ops[i] = min(min_ops[i], min_ops[i - 1] + 1)
+                    break
+
+        return min_ops[-1] if min_ops[-1] != float('inf') else -1
+
+**************************************************************************************************************************************************************************************************
+
+5.
+ALGORITHM:
+->Initialization: Initialize a variable ans to store the minimum number of times a needs to be repeated to make b a substring. Initialize ans to 1, as a can be repeated once to make b a substring.
+->Repeat a: Repeat a ans times and store it in a string t.
+->Check if b is a substring: Check if b is a substring of t. If it is, return ans.
+->Increment ans and repeat: If b is not a substring of t, increment ans by 1 and repeat step 2.
+->Return -1 if impossible: If b cannot be made a substring of a after repeating it, return -1.
+PROGRAM:
+class Solution:
+    def repeatedStringMatch(self, a: str, b: str) -> int:
+        ans = 1
+        t = a * ans
+        while True:
+            if b in t:
+                return ans
+            ans += 1
+            t += a
+
+**************************************************************************************************************************************************************************************************
+
