@@ -1,0 +1,217 @@
+1.
+AIM:COMPUTING BINOMIAL COEFFICIENT
+ALGORITHM:
+->Initialize a 2D array: Create a 2D array C of size (n+1) x (k+1) to store the binomial coefficients.
+->Base Cases: Set the base cases:
+C[i] = 1 for all i from 0 to n, since there is only one way to choose 0 elements from i elements.
+C[i][i] = 1 for all i from 0 to n, since there is only one way to choose i elements from i elements.
+->Compute Binomial Coefficients: For each i from 1 to n and j from 1 to min(i, k), compute the binomial coefficient using the recurrence relation:
+C[i][j] = C[i-1][j-1] + C[i-1][j]
+->Return Result: Return the value stored in C[n][k], which represents the binomial coefficient C(n, k).
+->Handle Errors: If the input n or k is negative, return an error or a default value, as the binomial coefficient is not defined for negative numbers.
+PROGRAM:
+def binomial_coefficient(n, k):
+    """
+    Computes the binomial coefficient C(n, k) using dynamic programming.
+
+    Args:
+        n (int): The total number of elements.
+        k (int): The number of elements to choose.
+
+    Returns:
+        int: The binomial coefficient C(n, k).
+    """
+    if n < 0 or k < 0 or k > n:
+        raise ValueError("Invalid input: n and k must be non-negative integers, and k must be less than or equal to n.")
+
+    # Initialize a 2D array to store the binomial coefficients
+    C = [[0] * (k + 1) for _ in range(n + 1)]
+
+    # Compute the binomial coefficients
+    for i in range(n + 1):
+        for j in range(min(i, k) + 1):
+            if j == 0 or j == i:
+                C[i][j] = 1
+            else:
+                C[i][j] = C[i - 1][j - 1] + C[i - 1][j]
+
+    return C[n][k]
+
+******************************************************************************************************************************************************************************
+
+2.AIM:Bellman Ford
+ALGORITHM:
+->Initialize the distance to the source vertex as 0.Initialize the distance to all other vertices as infinity.
+->Relax all edges in the graph, checking if a shorter path can be found by going through the current edge.Update the distance if a shorter path is found.
+->Repeat the relaxation step |V| - 1 times, where |V| is the number of vertices in the graph.This ensures that the shortest paths are found.
+->Optionally, check for negative cycles by relaxing all edges one more time.If any distance is updated, then a negative cycle exists.
+->Return the shortest distances from the source vertex to all other vertices.
+PROGRAM:
+def bellman_ford(graph, source):
+    """
+    This function implements the Bellman-Ford algorithm to find the shortest path from the source vertex to all other vertices in a weighted graph.
+
+    Parameters:
+    graph (dict): A dictionary representing the graph, where each key is a vertex and each value is a dictionary of neighboring vertices and their edge weights.
+    source (str): The source vertex from which to start the search.
+
+    Returns:
+    distances (dict): A dictionary where each key is a vertex and each value is the shortest distance from the source vertex to that vertex.
+    """
+    # Initialize distances to all vertices as infinity, except the source vertex which is 0
+    distances = {vertex: float('inf') for vertex in graph}
+    distances[source] = 0
+
+    # Relax edges repeatedly
+    for _ in range(len(graph) - 1):
+        for vertex, neighbors in graph.items():
+            for neighbor, weight in neighbors.items():
+                if distances[vertex] + weight < distances[neighbor]:
+                    distances[neighbor] = distances[vertex] + weight
+
+    # Check for negative-weight cycles
+    for vertex, neighbors in graph.items():
+        for neighbor, weight in neighbors.items():
+            if distances[vertex] + weight < distances[neighbor]:
+                raise ValueError("Graph contains a negative-weight cycle")
+
+    return distances
+
+# Example usage:
+graph = {
+    'A': {'B': 1, 'C': 4},
+    'B': {'A': 1, 'C': 2, 'D': 5},
+    'C': {'A': 4, 'B': 2, 'D': 1},
+    'D': {'B': 5, 'C': 1}
+}
+
+source = 'A'
+distances = bellman_ford(graph, source)
+print("Shortest distances from", source, "to all other vertices:")
+for vertex, distance in distances.items():
+    print(vertex, ":", distance)
+
+**************************************************************************************************************************************************************************************************
+
+3.
+AIM:WARSHAL FLOYD
+ALGORITHM:
+Initialization:
+->Initialize a 2D array dist to store the shortest distances between all pairs of vertices.
+Initialize the dist array with the edge weights from the input graph.
+->Relaxation:
+For each vertex k from 1 to n, relax all edges going through k by updating the shortest distances if a shorter path is found.
+->Iteration:
+Repeat the relaxation step for all vertices k from 1 to n.
+->Return:
+Return the dist array, which now contains the shortest distances between all pairs of vertices.
+->Handling Negative Cycles:
+If the graph contains negative cycles, the algorithm will detect them by updating the shortest distances infinitely.
+PROGRAM:
+def floyd_warshall(graph):
+    """
+    This function implements the Floyd-Warshall algorithm to find the shortest paths between all pairs of vertices in a weighted graph.
+
+    Parameters:
+    graph (list): A 2D list representing the weighted graph, where each element is the weight of the edge between two vertices.
+
+    Returns:
+    dist (list): A 2D list containing the shortest distances between all pairs of vertices.
+    """
+    n = len(graph)
+    dist = [[float('inf') for _ in range(n)] for _ in range(n)]
+
+    # Initialize the dist array with the edge weights
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                dist[i][j] = 0
+            elif graph[i][j] != float('inf'):
+                dist[i][j] = graph[i][j]
+
+    # Relax edges repeatedly
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if dist[i][k] + dist[k][j] < dist[i][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+
+    return dist
+
+# Example usage:
+graph = [[0, 3, float('inf'), 5],
+         [2, 0, float('inf'), 4],
+         [float('inf'), 1, 0, float('inf')],
+         [float('inf'), float('inf'), 2, 0]]
+
+dist = floyd_warshall(graph)
+print("Shortest distances between all pairs of vertices:")
+for row in dist:
+    print(row)
+
+****************************************************************************************************************************************************************************
+
+4.
+AIM:MEET IN THE MIDDLE TECHNIQUE
+ALGORITHM:
+Split the Input:
+->Divide the input array into two subsets, A and 𝐵, such that A contains elements from the start to the middle of the array and B contains elements from the middle to the end of the array.
+->Calculate Subset Sums:
+Calculate the sum of all possible subsets of A and B. This can be done using a standard algorithm for generating all subsets.
+->Combine Subset Sums:Combine the subset sums of A and B to find all possible sums. This can be done using a binary search to find the closest sum to the target sum.
+->Find the Closest Sum:
+Find the closest sum to the target sum by comparing the combined sums with the target sum.
+->Return the Result:
+Return the closest sum found as the result.
+PROGRAM:
+def meet_in_the_middle(arr, target):
+    """
+    This function implements the Meet in the Middle technique to find the closest sum to the target sum from a given array.
+
+    Parameters:
+    arr (list): The input array.
+    target (int): The target sum.
+
+    Returns:
+    int: The closest sum to the target sum.
+    """
+    n = len(arr)
+    mid = n // 2
+
+    # Calculate subset sums for the first half
+    subset_sums_A = set()
+    for i in range(1 << mid):
+        subset_sum = 0
+        for j in range(mid):
+            if (i & (1 << j)):
+                subset_sum += arr[j]
+        subset_sums_A.add(subset_sum)
+
+    # Calculate subset sums for the second half
+    subset_sums_B = set()
+    for i in range(1 << (n - mid)):
+        subset_sum = 0
+        for j in range(mid, n):
+            if (i & (1 << (j - mid))):
+                subset_sum += arr[j]
+        subset_sums_B.add(subset_sum)
+
+    # Combine subset sums and find the closest sum
+    closest_sum = float('inf')
+    for sum_A in subset_sums_A:
+        for sum_B in subset_sums_B:
+            combined_sum = sum_A + sum_B
+            if abs(combined_sum - target) < abs(closest_sum - target):
+                closest_sum = combined_sum
+
+    return closest_sum
+
+# Example usage:
+arr = [1, 2, 3, 4, 5]
+target = 10
+result = meet_in_the_middle(arr, target)
+print("Closest sum to the target:", result)
+
+
+
+
