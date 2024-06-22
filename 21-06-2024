@@ -1,0 +1,283 @@
+1. 
+AIM:Word break problem
+ALGORITHM:
+->Initialize a 2D Array:
+Create a 2D array dp of size (n+1) x (m+1) to store the dynamic programming states, where n is the length of the input word and m is the length of the dictionary.
+->Base Cases:
+Set dp[j] = True for all j from 0 to m, since an empty string can be broken into any word in the dictionary.
+Set dp[i] = False for all i from 1 to n, since an empty word cannot be broken.
+->Dynamic Programming:
+For each i from 1 to n and each j from 1 to m, check if the substring from i to n can be broken into a word in the dictionary.
+If dp[i-1][j-1] is True and the substring from i to n matches a word in the dictionary, set dp[i][j] = True.
+->Return Result:
+Return dp[n][m], which indicates whether the input word can be broken into words in the dictionary.
+->Handling Dictionary:
+Preprocess the dictionary to store the words in a trie data structure for efficient lookup.
+PROGRAM:
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_word = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_word = True
+
+    def search(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+        return node.is_word
+
+def word_break(word, dictionary):
+    """
+    This function checks if a given word can be broken into words in a dictionary using dynamic programming.
+
+    Parameters:
+    word (str): The input word.
+    dictionary (list): The dictionary of words.
+
+    Returns:
+    bool: Whether the word can be broken into words in the dictionary.
+    """
+    trie = Trie()
+    for word in dictionary:
+        trie.insert(word)
+
+    n = len(word)
+    dp = [[False] * (len(dictionary) + 1) for _ in range(n + 1)]
+
+    for i in range(n + 1):
+        dp[i][0] = False
+
+    for i in range(1, n + 1):
+        for j in range(1, len(dictionary) + 1):
+            if dp[i-1][j-1] and trie.search(word[i-1:i]):
+                dp[i][j] = True
+
+    return dp[n][len(dictionary)]
+
+# Example usage:
+word = "leetcode"
+dictionary = ["leet", "code"]
+result = word_break(word, dictionary)
+print("Word can be broken:", result)
+
+*****************************************************************************************************************************************************************************
+
+2.
+AIM:Word trap problem
+ALGORITHM:
+->Split the Input:
+Split the input word into a list of characters.
+->Create a Trie:
+Create a trie data structure to store the dictionary words.
+->Check for Traps:
+Traverse the trie from the root node to each character in the input word.
+If a character is not found in the trie, it means there is no word in the dictionary that contains that character, so it is a trap.
+->Return Result:
+Return the list of traps found in the input word.
+->Handling Dictionary:
+Preprocess the dictionary to store the words in a trie data structure for efficient lookup.
+PROGRAM:
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_word = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_word = True
+
+    def search(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+        return node.is_word
+
+def word_trap(word, dictionary):
+    """
+    This function checks if a given word contains any traps by comparing it with the dictionary words.
+
+    Parameters:
+    word (str): The input word.
+    dictionary (list): The dictionary of words.
+
+    Returns:
+    list: The list of traps found in the input word.
+    """
+    trie = Trie()
+    for word in dictionary:
+        trie.insert(word)
+
+    traps = []
+    for char in word:
+        if not trie.search(char):
+            traps.append(char)
+
+    return traps
+
+# Example usage:
+word = "leetcode"
+dictionary = ["leet", "code"]
+traps = word_trap(word, dictionary)
+print("Traps found:", traps)
+
+****************************************************************************************************************************************************************************
+
+3.
+AIM:OBST
+ALGORITHM:
+->Calculate Frequencies:
+Calculate the frequency of each key in the input array.
+->Create a Trie:
+Create a trie data structure to store the keys and their frequencies.
+->Build the OBST:
+Traverse the trie and build the OBST by recursively splitting the trie into two subtrees based on the frequency of the keys.
+->Return Result:
+Return the root node of the OBST.
+->Handling Dictionary:
+Preprocess the dictionary to store the keys and their frequencies in a trie data structure for efficient lookup.
+PROGRAM:class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_word = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_word = True
+
+    def search(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+        return node.is_word
+
+def optimal_binary_search_tree(keys, frequencies):
+    """
+    This function creates an Optimal Binary Search Tree (OBST) from a given list of keys and their frequencies.
+
+    Parameters:
+    keys (list): The list of keys.
+    frequencies (list): The list of frequencies corresponding to the keys.
+
+    Returns:
+    TrieNode: The root node of the OBST.
+    """
+    trie = Trie()
+    for key, frequency in zip(keys, frequencies):
+        trie.insert(key)
+
+    # Traverse the trie and build the OBST
+    root = None
+    for node in trie.root.children.values():
+        if node.is_word:
+            root = node
+            break
+
+    # Build the OBST recursively
+    def build_obst(node):
+        if node.is_word:
+            return node
+        else:
+            left = build_obst(node.children[0])
+            right = build_obst(node.children[1])
+            return left if left.is_word else right
+
+    return build_obst(root)
+
+# Example usage:
+keys = ['A', 'B', 'C', 'D', 'E']
+frequencies = [10, 20, 30, 40, 50]
+obst_root = optimal_binary_search_tree(keys, frequencies)
+print("Optimal Binary Search Tree Root:", obst_root)
+
+
+*****************************************************************************************************************************************************************************
+
+4,
+AIM:Floyd algorithm
+ALGORITHM:
+Initialization:
+Initialize a 2D array dist to store the shortest distances between all pairs of vertices.
+Initialize the dist array with the edge weights from the input graph.
+Relaxation:
+For each vertex k from 1 to n, relax all edges going through k by updating the shortest distances if a shorter path is found.
+Iteration:
+Repeat the relaxation step for all vertices k from 1 to n.
+Return:
+Return the dist array, which now contains the shortest distances between all pairs of vertices.
+Handling Negative Cycles:
+If the graph contains negative cycles, the algorithm will detect them by updating the shortest distances infinitely.
+PROGRAM:
+def floyd_warshall(graph):
+    """
+    This function implements the Floyd-Warshall algorithm to find the shortest paths between all pairs of vertices in a weighted graph.
+
+    Parameters:
+    graph (list): A 2D list representing the weighted graph, where each element is the weight of the edge between two vertices.
+
+    Returns:
+    dist (list): A 2D list containing the shortest distances between all pairs of vertices.
+    """
+    n = len(graph)
+    dist = [[float('inf') for _ in range(n)] for _ in range(n)]
+
+    # Initialize the dist array with the edge weights
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                dist[i][j] = 0
+            elif graph[i][j] != float('inf'):
+                dist[i][j] = graph[i][j]
+
+    # Relax edges repeatedly
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if dist[i][k] + dist[k][j] < dist[i][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+
+    return dist
+
+# Example usage:
+graph = [[0, 3, float('inf'), 5],
+         [2, 0, float('inf'), 4],
+         [float('inf'), 1, 0, float('inf')],
+         [float('inf'), float('inf'), 2, 0]]
+
+dist = floyd_warshall(graph)
+print("Shortest distances between all pairs of vertices:")
+for row in dist:
+    print(row)
+
