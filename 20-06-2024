@@ -1,0 +1,183 @@
+1.
+AIM:Dice throw problem
+ALGORITHM:
+->Initialization:
+Initialize a 2D array dp to store the probabilities of getting a certain sum by throwing two dice.
+->Base Cases:
+Set dp = 1 since there is only one way to get a sum of 0 (by throwing two 0s).
+->Dynamic Programming:
+For each i from 1 to 6 and each j from 1 to 6, calculate the probability of getting a sum of i + j by throwing two dice.
+Update dp[i][j] with the probability.
+->Return Result:
+Return the dp array, which now contains the probabilities of getting each sum from 0 to 12.
+->Handling Edge Cases:
+Handle edge cases where the sum exceeds 12.
+PROGRAM:
+def dice_throw():
+    """
+    This function calculates the probabilities of getting each sum from 0 to 12 by throwing two dice.
+
+    Returns:
+    dp (list): A 2D list containing the probabilities of getting each sum.
+    """
+    dp = [[0.0 for _ in range(13)] for _ in range(7)]
+
+    # Base cases
+    dp[0][0] = 1.0
+
+    # Dynamic programming
+    for i in range(1, 7):
+        for j in range(1, 7):
+            dp[i][i + j] = dp[i - 1][i] * dp[1][j] if i + j <= 12 else 0.0
+
+    return dp
+
+# Example usage:
+dp = dice_throw()
+print("Probabilities of getting each sum:")
+for row in dp:
+    print(row)
+
+******************************************************************************************************************************************************************************
+
+2.
+AIM:GIVE ME ALGORITHM IN 5 POINTS AND CODE IN PYTHON
+ALGORITHM:
+->Initialization:
+Initialize a 2D array dp to store the subset sums.
+Initialize the dp array with all elements set to 0.
+->Dynamic Programming:
+For each element in the array, calculate the subset sums by iterating through all subsets of the array.
+Update the dp array with the subset sums.
+->Return Result:
+Return the dp array, which now contains the subset sums.
+->Handling Edge Cases:
+Handle edge cases where the sum exceeds the target sum.
+->Optimization:
+Use the Meet in the Middle technique to optimize the algorithm by dividing the array into two halves and calculating the subset sums for each half separately.
+PROGRAM:
+def subset_sum(arr, target):
+    """
+    This function calculates the subset sums for a given array and target sum.
+
+    Parameters:
+    arr (list): The input array.
+    target (int): The target sum.
+
+    Returns:
+    dp (list): A 2D list containing the subset sums.
+    """
+    n = len(arr)
+    dp = [[0] * (target + 1) for _ in range(n + 1)]
+
+    # Dynamic programming
+    for i in range(1, n + 1):
+        for j in range(1, target + 1):
+            if arr[i - 1] <= j:
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - arr[i - 1]] + arr[i - 1])
+            else:
+                dp[i][j] = dp[i - 1][j]
+
+    return dp
+
+# Example usage:
+arr = [1, 2, 3, 4, 5]
+target = 7
+dp = subset_sum(arr, target)
+print("Subset sums:")
+for row in dp:
+    print(row)
+
+*****************************************************************************************************************************************************************************
+
+3.
+AIM:
+->Initialization:
+Initialize a 2D array dp to store the maximum profit for each subproblem.
+Initialize the dp array with all elements set to 0.
+->Dynamic Programming:
+For each subproblem, calculate the maximum profit by considering all possible operations.
+Update the dp array with the maximum profit.
+->Return Result:
+Return the maximum profit for the entire problem.
+->Handling Edge Cases:
+Handle edge cases where the profit exceeds the maximum allowed.
+->Optimization:
+Use dynamic programming to optimize the algorithm by avoiding redundant calculations.
+PROGRAM:
+def assembly_line_scheduling(n, m, p):
+    """
+    This function calculates the maximum profit for an assembly line scheduling problem.
+
+    Parameters:
+    n (int): The number of operations.
+    m (int): The maximum allowed profit.
+    p (int): The profit for each operation.
+
+    Returns:
+    dp (list): A 2D list containing the maximum profit for each subproblem.
+    """
+    dp = [[0] * (m + 1) for _ in range(n + 1)]
+
+    # Dynamic programming
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            if i == 1:
+                dp[i][j] = min(j, p)
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - p] + p)
+
+    return dp
+
+# Example usage:
+n = 5
+m = 10
+p = 3
+dp = assembly_line_scheduling(n, m, p)
+print("Maximum profit:", dp[n][m])
+
+****************************************************************************************************************************************************************************
+
+4. 
+AIM:Longest Palindromic subsequence
+ALGORITHM:
+->Initialization:
+Create a 2D array dp to store the lengths of the longest palindromic subsequences.
+Initialize the dp array with all elements set to 1, since the minimum length of a palindromic subsequence is 1.
+->Dynamic Programming:
+Iterate through the input string from left to right, and for each character, iterate from the right to the left.
+If the characters at the current indices are the same, update the dp array with the length of the palindromic subsequence formed by adding 2 to the length of the palindromic subsequence formed by excluding the current characters.
+If the characters at the current indices are different, update the dp array with the maximum of the lengths of the palindromic subsequences formed by excluding the current characters from the left and right sides.
+->Return Result:
+Return the maximum value in the dp array, which represents the length of the longest palindromic subsequence.
+->Handling Edge Cases:
+Handle edge cases where the input string is empty or has only one character.
+->Optimization:
+Use dynamic programming to optimize the algorithm by avoiding redundant calculations.
+PROGRAM:
+def longest_palindromic_subsequence(s):
+    """
+    This function finds the length of the longest palindromic subsequence in a given string.
+
+    Parameters:
+    s (str): The input string.
+
+    Returns:
+    int: The length of the longest palindromic subsequence.
+    """
+    n = len(s)
+    dp = [[1] * n for _ in range(n)]
+
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if s[i] == s[j]:
+                dp[i][j] = dp[i + 1][j - 1] + 2
+            else:
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1])
+
+    return dp[0][n - 1]
+
+# Example usage:
+s = "bbbab"
+length = longest_palindromic_subsequence(s)
+print("Length of the longest palindromic subsequence:", length)
