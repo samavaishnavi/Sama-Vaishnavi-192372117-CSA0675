@@ -1,0 +1,621 @@
+11-A.
+ALGORITHM:
+->Initialize a variable count to keep track of the number of good strings.
+->Iterate through each character in the range [s1, s2] (inclusive).
+->For each character, check if the string formed by concatenating the current character n-1 times is lexicographically between s1 and s2 and does not contain evil as a substring.
+->If the string is good, increment the count variable.
+->Return the count modulo 10^9 + 7.
+PROGRAM:
+def findGoodStrings(n, s1, s2, evil):
+    mod = 10 ** 9 + 7
+    count = 0
+    
+    for char in range(ord(s1[0]), ord(s2[0]) + 1):
+        current_string = chr(char) * (n - 1)
+        if s1 <= current_string <= s2 and evil not in current_string:
+            count += 1
+    
+    return count % mod
+
+
+******************************************************************************************************************************************************************************
+
+11-B.
+ALGORITHM:
+->Initialize a variable candidate to keep track of the potential majority element and a variable count to keep track of the number of occurrences of the candidate.
+->Iterate through the nums array, updating candidate and count as follows:
+If count is 0, set candidate to the current element.
+If the current element is the same as candidate, increment count.
+If the current element is different from candidate, decrement count.
+->Reset count to 0 and iterate through the nums array again, counting the number of occurrences of candidate.
+->Increment count for each occurrence of candidate.
+->If count is greater than n/2, return candidate as the majority element. Otherwise, return -1 (no majority element found).
+program:
+def majorityElement(nums):
+    count = 0
+    candidate = 0
+    
+    # Find the candidate majority element
+    for num in nums:
+        if count == 0:
+            candidate = num
+        count += (1 if num == candidate else -1)
+    
+    # Verify if candidate is the majority element
+    count = 0
+    for num in nums:
+        if num == candidate:
+            count += 1
+    
+    return candidate if count > len(nums) // 2 else -1
+
+
+*****************************************************************************************************************************************************************************
+
+12-A:
+ALGORITHM:
+->Determine the dimensions of the input matrix: rows and cols.
+->Create a new 2D array transpose with dimensions cols x rows.
+->Iterate through the input matrix:
+For each element at position (i, j), assign it to the position (j, i) in the transpose matrix.
+->Return the transpose matrix.
+PROGRAM:
+def transpose(matrix):
+    rows, cols = len(matrix), len(matrix[0])
+    transpose = [[0 for _ in range(rows)] for _ in range(cols)]
+    
+    for i in range(rows):
+        for j in range(cols):
+            transpose[j][i] = matrix[i][j]
+    
+    return transpose
+
+
+******************************************************************************************************************************************************************************
+
+
+12-B.
+ALGORITHM:
+->Initialize a variable count to 0 to keep track of the number of valid pairs.
+->Iterate through the arrays nums1 and nums2 from index 0 to n-1 (where n is the size of the arrays):
+For each index i, iterate through the indices j from i+1 to n-1.
+->Check if the condition nums1[i] - nums1[j] <= nums2[i] - nums2[j] + diff is satisfied.
+->If the condition is satisfied, increment the count variable.
+->Return the final value of count.
+PROGRAM:
+def countPairs(nums1, nums2, diff):
+    n = len(nums1)
+    count = 0
+    
+    for i in range(n):
+        for j in range(i+1, n):
+            if nums1[i] - nums1[j] <= nums2[i] - nums2[j] + diff:
+                count += 1
+    
+    return count
+
+
+*****************************************************************************************************************************************************************************
+
+
+13-A.
+ALGORITHM:
+->Initialize variables digit_count to 0 and start to 1 (the first digit in the sequence).
+->Determine the range of digits that the nth digit belongs to:
+While digit_count + 9 * start * (10 ** (len(str(start)) - 1)) < n, add the number of digits in the current range to digit_count and multiply start by 10.
+->Calculate the position of the nth digit within the current range:
+position = (n - digit_count - 1) % (len(str(start))).
+->Return the digit at the calculated position in the current start value.
+PROGRAM:
+def findNthDigit(n):
+    digit_count = 0
+    start = 1
+    
+    # Determine the range of digits that the nth digit belongs to
+    while digit_count + 9 * start * (10 ** (len(str(start)) - 1)) < n:
+        digit_count += 9 * start * (10 ** (len(str(start)) - 1))
+        start *= 10
+    
+    # Calculate the position of the nth digit within the current range
+    position = (n - digit_count - 1) % len(str(start))
+    
+    # Return the digit at the calculated position
+    return int(str(start)[position])
+
+
+*****************************************************************************************************************************************************************************
+
+
+13-B.
+ALGORITHM:
+->Initialize variables start and max_length to 0, and result to an empty string.
+->Iterate through the string s using a sliding window approach:
+For each character c in s, check if both the uppercase and lowercase versions of c are present in the current window.
+If both versions are present, update max_length to the maximum of max_length and the current window length.
+If both versions are not present, move the start of the window to the right by one position.
+->If max_length is greater than 0, return the substring of s from start to start + max_length.
+->Otherwise, return an empty string.
+PROGRAM:
+def longestNiceSubstring(s):
+    start = 0
+    max_length = 0
+    result = ""
+    
+    for i in range(len(s)):
+        seen = set()
+        for j in range(i, len(s)):
+            seen.add(s[j].lower())
+            seen.add(s[j].upper())
+            if len(seen) == 2 * (j - i + 1):
+                if j - i + 1 > max_length:
+                    max_length = j - i + 1
+                    result = s[i:j+1]
+            else:
+                start = j + 1
+                break
+    
+    return result
+
+
+****************************************************************************************************************************************************************************
+
+
+14-A.
+ALGORITHM:
+->Split the input sentence into a list of words.
+->Iterate through the list of words:
+For each word, check if the search word is a prefix of the current word.
+If it is, return the index of the current word (1-indexed).
+->If the search word is not a prefix of any word, return 1.
+PROGRAM:
+def isPrefixOfWord(sentence, searchWord):
+    words = sentence.split()
+    
+    for i, word in enumerate(words):
+        if word.startswith(searchWord):
+            return i + 1
+    
+    return 1
+
+
+****************************************************************************************************************************************************************************
+
+
+14-B.
+ALGORITHM:
+->Initialize a variable result to False.
+->Iterate through the array nums using two nested loops:
+The outer loop iterates from index 0 to len(nums) - 1.
+The inner loop iterates from max(0, i - indexDiff) to min(len(nums) - 1, i + indexDiff).
+->For each pair of indices (i, j), check if abs(i - j) <= indexDiff and abs(nums[i] - nums[j]) <= valueDiff.
+->If both conditions are satisfied, set result to True and break out of the loops.
+->Return the final value of result.
+PROGRAM:
+def containsNearbyAlmostDuplicate(nums, indexDiff, valueDiff):
+    result = False
+    
+    for i in range(len(nums)):
+        for j in range(max(0, i - indexDiff), min(len(nums), i + indexDiff + 1)):
+            if j != i and abs(i - j) <= indexDiff and abs(nums[i] - nums[j]) <= valueDiff:
+                result = True
+                break
+        if result:
+            break
+    
+    return result
+
+
+****************************************************************************************************************************************************************************
+
+
+15-A.
+ALGORITHM:
+->Initialize a variable result to the length of the input array nums.
+->Iterate through the array nums from the end to the beginning:
+If the current element is greater than or equal to the next element, continue to the next iteration.
+->Otherwise, remove the current element and the next element from the array, and update the result variable.
+->Repeat step 2 until the entire array has been processed.
+->Return the final value of result.
+PROGRAM:
+def minLength(nums):
+    result = len(nums)
+    
+    i = len(nums) - 1
+    while i > 0:
+        if nums[i] >= nums[i-1]:
+            i -= 1
+        else:
+            nums.pop(i)
+            nums.pop(i-1)
+            result -= 2
+            i -= 1
+    
+    return result
+
+
+***************************************************************************************************************************************************************************
+
+
+15-B.
+ALGORITHM:
+->Define a TreeNode class to represent a node in the binary search tree.
+->Implement a recursive function sortedArrayToBST that takes the input array nums and returns the root of the height-balanced binary search tree:
+If the array is empty, return None.
+Find the middle index of the array by taking the average of the start and end indices.
+Create a new TreeNode with the value at the middle index.
+Recursively call the sortedArrayToBST function with the left half of the array (from start to middle-1) and assign the result to the left child of the current node.
+Recursively call the sortedArrayToBST function with the right half of the array (from middle+1 to end) and assign the result to the right child of the current node.
+->Return the current node.
+Call the sortedArrayToBST function with the input array nums and return the root of the height-balanced binary search tree.
+PROGRSAM:
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def sortedArrayToBST(nums):
+    if not nums:
+        return None
+    
+    mid = len(nums) // 2
+    root = TreeNode(nums[mid])
+    root.left = sortedArrayToBST(nums[:mid])
+    root.right = sortedArrayToBST(nums[mid+1:])
+    
+    return root
+
+
+*****************************************************************************************************************************************************************************
+
+
+16-A.
+ALGORITHM:
+->Create an empty set result to store the substrings.
+->Iterate through the input array words:
+For each word, check if it is a substring of any other word in the array.
+->If it is a substring, add it to the result set.
+->Convert the result set to a list and return it.
+PROGRAM:
+def stringMatching(words):
+    result = set()
+    
+    for word in words:
+        for other_word in words:
+            if word != other_word and word in other_word:
+                result.add(word)
+    
+    return list(result)
+
+
+*****************************************************************************************************************************************************************************
+
+
+16-B.
+ALGORITHM:
+->Create a new empty list result to store the reordered elements.
+->Sort the input array nums in ascending order.
+Initialize two pointers, i and j, to 0 and 1 respectively.
+->Iterate through the result list:
+If the length of result is even, append nums[j] to result and increment j by 2.
+->If the length of result is odd, append nums[i] to result and increment i by 2.
+->Return the result list.
+PROGRAM:
+def wiggleSort(nums):
+    nums.sort()
+    result = []
+    i, j = 0, 1
+    
+    while len(result) < len(nums):
+        if len(result) % 2 == 0:
+            result.append(nums[j])
+            j += 2
+        else:
+            result.append(nums[i])
+            i += 2
+    
+    return result
+
+
+****************************************************************************************************************************************************************************
+
+
+17-A:
+ALGORITHM:
+->Initialize a queue q and a distance matrix dist with the same dimensions as the input matrix mat.
+->Iterate through the input matrix mat:
+If the current element is 0, add its coordinates (i, j) to the queue q and set dist[i][j] to 0.
+If the current element is 1, set dist[i][j] to float('inf').
+->While the queue q is not empty:
+Dequeue an element (i, j) from the front of the queue.
+->Check the four adjacent cells (i-1, j), (i+1, j), (i, j-1), and (i, j+1):
+If the adjacent cell is within the matrix bounds and its distance is greater than dist[i][j] + 1, update its distance to dist[i][j] + 1 and enqueue its coordinates to the back of the queue.
+->Return the dist matrix.
+PROGRAM:
+from collections import deque
+
+def updateMatrix(mat):
+    m, n = len(mat), len(mat[0])
+    q = deque()
+    dist = [[float('inf')] * n for _ in range(m)]
+    
+    for i in range(m):
+        for j in range(n):
+            if mat[i][j] == 0:
+                q.append((i, j))
+                dist[i][j] = 0
+    
+    while q:
+        i, j = q.popleft()
+        for di, dj in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+            ni, nj = i + di, j + dj
+            if 0 <= ni < m and 0 <= nj < n and dist[ni][nj] > dist[i][j] + 1:
+                dist[ni][nj] = dist[i][j] + 1
+                q.append((ni, nj))
+    
+    return dist
+
+
+****************************************************************************************************************************************************************************
+
+
+17-B.
+ALGORITHM:
+->Create a new ListNode class to represent a node in the linked list.
+->Implement a function mergeKLists that takes a list of linked lists lists as input and returns the merged sorted linked list:
+If the lists is empty, return None.
+Create a min-heap (priority queue) to store the first nodes of each linked list.
+Iterate through the lists and add the first node of each linked list to the min-heap.
+Create a new linked list dummy and a pointer curr to the last node of the new list.
+->While the min-heap is not empty:
+Pop the node with the smallest value from the min-heap.
+Add the popped node to the end of the dummy list and update the curr pointer.
+If the popped node has a next node, add the next node to the min-heap.
+->Return the dummy.next (the head of the merged linked list).
+Define the ListNode class with val and next attributes.
+Implement the mergeKLists function as described in step 2.
+->Call the mergeKLists function with the input lists and return the merged sorted linked list.
+PROGRAM:
+from heapq import heappush, heappop
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def mergeKLists(lists):
+    if not lists:
+        return None
+    
+    heap = []
+    for i, head in enumerate(lists):
+        if head:
+            heappush(heap, (head.val, i, head))
+    
+    dummy = ListNode()
+    curr = dummy
+    while heap:
+        val, i, node = heappop(heap)
+        curr.next = node
+        curr = curr.next
+        if node.next:
+            heappush(heap, (node.next.val, i, node.next))
+    
+    return dummy.next
+
+
+***************************************************************************************************************************************************************************
+
+
+18-A.
+ALGORITHM:
+->Initialize a variable operations to 0 to keep track of the number of operations performed.
+->Iterate through the array arr1:
+If the current element in arr1 is less than or equal to the previous element, find the smallest element in arr2 that is greater than the previous element in arr1.
+If such an element is found, replace the current element in arr1 with it and increment operations by 1.
+If no such element is found in arr2, return -1 (it's not possible to make arr1 strictly increasing).
+->Return the final value of operations.
+PROGRAM:
+def makeArrayIncreasing(arr1, arr2):
+    operations = 0
+    prev = float('-inf')
+    
+    for num in arr1:
+        if num <= prev:
+            replace = float('inf')
+            for other in arr2:
+                if other > prev:
+                    replace = min(replace, other)
+            if replace == float('inf'):
+                return -1
+            arr1[arr1.index(num)] = replace
+            operations += 1
+        prev = num
+    
+    return operations
+
+
+****************************************************************************************************************************************************************************
+
+
+18-B.
+ALGORITHM:
+->Determine the lengths of the two input arrays, m and n.
+If the sum of the lengths is odd, the median is the middle element of the combined sorted array. If the sum is even, the median is the average of the two middle elements.
+->Implement a binary search function findMedianSortedArrays that takes the two input arrays nums1 and nums2 as arguments:
+Initialize two pointers left and right to the start and end of the combined sorted array, respectively.
+->While left <= right, calculate the middle index mid and the corresponding elements nums1[i] and nums2[j] from the two arrays.
+Depending on the relationship between nums1[i] and nums2[j], update the left and right pointers accordingly.
+->Once the binary search is complete, return the median value.
+Call the findMedianSortedArrays function with the input arrays nums1 and nums2.
+->Return the result.
+PROGRAM:
+def findMedianSortedArrays(nums1, nums2):
+    m, n = len(nums1), len(nums2)
+    total = m + n
+    
+    if total % 2 == 1:
+        return findKth(nums1, nums2, total // 2 + 1)
+    else:
+        return (findKth(nums1, nums2, total // 2) + findKth(nums1, nums2, total // 2 + 1)) / 2
+
+def findKth(nums1, nums2, k):
+    if not nums1:
+        return nums2[k-1]
+    if not nums2:
+        return nums1[k-1]
+    
+    left, right = 0, len(nums1) - 1
+    
+    while left <= right:
+        mid = (left + right) // 2
+        j = k - mid - 1
+        
+        if j < 0:
+            right = mid - 1
+        elif j >= len(nums2):
+            left = mid + 1
+        else:
+            if nums1[mid] < nums2[j]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    
+    if left == len(nums1):
+        return nums2[k-1]
+    if left == 0:
+        return nums1[k-1]
+    
+    return min(nums1[left-1], nums2[k-left-1])
+
+
+****************************************************************************************************************************************************************************
+
+
+19-A.
+ALGORITHM:
+->Initialize a variable repeat to 1.
+->Concatenate string a with itself repeat times to form a new string a_repeat.
+Check if string b is a substring of a_repeat:
+If b is a substring of a_repeat, return repeat.
+->If b is not a substring of a_repeat, increment repeat by 1.
+If the length of a_repeat becomes greater than the length of b, return -1 (it's impossible for b to be a substring of a after repeating it).
+->Repeat steps 2-4 until a solution is found or it's determined that no solution exists.
+PROGRAM:
+def repeatedStringMatch(a, b):
+    repeat = 1
+    a_repeat = a
+    
+    while len(a_repeat) < len(b):
+        a_repeat += a
+        repeat += 1
+    
+    if b in a_repeat:
+        return repeat
+    
+    a_repeat += a
+    repeat += 1
+    
+    if b in a_repeat:
+        return repeat
+    
+    return -1
+
+
+****************************************************************************************************************************************************************************
+
+
+19-B.
+ALGORITHM:
+->Sort the input array nums in ascending order.
+->Initialize an empty list result to store the unique quadruplets.
+Iterate through the array nums using four nested loops:
+The outer loop iterates from index 0 to n-4, where n is the length of nums.
+The second loop iterates from i+1 to n-3.
+The third loop iterates from j+1 to n-2.
+->The innermost loop iterates from k+1 to n-1.
+For each quadruplet (nums[i], nums[j], nums[k], nums[l]), check if the sum is equal to the target value:
+->If the sum is equal to the target, add the quadruplet to the result list, making sure to skip any duplicates.
+If the sum is less than the target, continue to the next iteration of the innermost loop.
+If the sum is greater than the target, break out of the innermost loop and continue to the next iteration of the third loop.
+->Return the result list.
+PROGRAM:
+def fourSum(nums, target):
+    nums.sort()
+    n = len(nums)
+    result = []
+    
+    for i in range(n-3):
+        if i > 0 and nums[i] == nums[i-1]:
+            continue
+        for j in range(i+1, n-2):
+            if j > i+1 and nums[j] == nums[j-1]:
+                continue
+            k, l = j+1, n-1
+            while k < l:
+                total = nums[i] + nums[j] + nums[k] + nums[l]
+                if total == target:
+                    result.append([nums[i], nums[j], nums[k], nums[l]])
+                    while k < l and nums[k] == nums[k+1]:
+                        k += 1
+                    while k < l and nums[l] == nums[l-1]:
+                        l -= 1
+                    k += 1
+                    l -= 1
+                elif total < target:
+                    k += 1
+                else:
+                    l -= 1
+    
+    return result
+
+
+*****************************************************************************************************************************************************************************
+
+
+20-A.
+ALGORITHM:
+->Initialize a variable n to the length of the input array nums.
+->Calculate the expected sum of all numbers in the range [0, n] using the formula n * (n + 1) // 2.
+->Calculate the actual sum of all numbers in the input array nums.
+->Subtract the actual sum from the expected sum to get the missing number.
+->Return the missing number.
+PROGRAM:
+def missingNumber(nums):
+    n = len(nums)
+    expected_sum = n * (n + 1) // 2
+    actual_sum = sum(nums)
+    return expected_sum - actual_sum
+
+
+****************************************************************************************************************************************************************************
+
+20-B.
+ALGORITHM:
+->Initialize a variable count to 0 and a variable candidate to 0.
+->Iterate through the array nums:
+If count is 0, assign the current element to candidate.
+->If the current element is the same as candidate, increment count by 1.
+If the current element is different from candidate, decrement count by 1.
+->Reset count to 0 and iterate through the array again to verify if candidate is the majority element.
+Increment count for each occurrence of candidate.
+->If count is greater than n/2, return candidate as the majority element. Otherwise, return -1 (no majority element found).
+PROGRAM:
+def majorityElement(nums):
+    count = 0
+    candidate = 0
+    
+    # Find the candidate majority element
+    for num in nums:
+        if count == 0:
+            candidate = num
+        count += (1 if num == candidate else -1)
+    
+    # Verify if candidate is the majority element
+    count = 0
+    for num in nums:
+        if num == candidate:
+            count += 1
+    
+    return candidate if count > len(nums) // 2 else -1
+    
