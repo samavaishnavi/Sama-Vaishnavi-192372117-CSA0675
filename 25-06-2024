@@ -1,0 +1,542 @@
+21-A.
+ALGORITHM:
+->Initialize a 2D array maxLocal of size (n-2) x (n-2) to store the largest values in each 3x3 submatrix.
+->Iterate through the input matrix grid from row 1 to n-2 and column 1 to n-2.
+->For each cell (i, j), find the largest value in the 3x3 submatrix centered around (i, j) by iterating through the 9 cells in the submatrix.
+->Store the largest value in the corresponding cell (i-1, j-1) of the maxLocal matrix.
+->Return the maxLocal matrix
+PROGRAM:
+class Solution:
+    def largestLocal(self, grid: List[List[int]]) -> List[List[int]]:
+        n = len(grid)
+        maxLocal = [[0] * (n-2) for _ in range(n-2)]
+        
+        for i in range(1, n-1):
+            for j in range(1, n-1):
+                max_val = 0
+                for x in range(i-1, i+2):
+                    for y in range(j-1, j+2):
+                        max_val = max(max_val, grid[x][y])
+                maxLocal[i-1][j-1] = max_val
+        
+        return maxLocal
+
+******************************************************************************************************************
+
+21-B.
+ALGORITHM:
+->If the linked list is empty or has only one node, return the head as it is already sorted.
+->Find the middle of the linked list using the slow and fast pointer technique.
+->Recursively sort the left and right halves of the linked list using the merge sort algorithm.
+->Merge the sorted left and right halves using the merge function.
+->Return the head of the sorted linked list.
+PROGRAM:
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def sortList(self, head: ListNode) -> ListNode:
+        if not head or not head.next:
+            return head
+        
+        # Find the middle of the linked list
+        slow = fast = head
+        prev = None
+        while fast and fast.next:
+            prev = slow
+            slow = slow.next
+            fast = fast.next.next
+        prev.next = None
+        
+        # Recursively sort the left and right halves
+        left = self.sortList(head)
+        right = self.sortList(slow)
+        
+        # Merge the sorted left and right halves
+        return self.merge(left, right)
+    
+    def merge(self, left: ListNode, right: ListNode) -> ListNode:
+        dummy = ListNode()
+        curr = dummy
+        
+        while left and right:
+            if left.val < right.val:
+                curr.next = left
+                left = left.next
+            else:
+                curr.next = right
+                right = right.next
+            curr = curr.next
+        
+        if left:
+            curr.next = left
+        elif right:
+            curr.next = right
+        
+        return dummy.next
+
+*******************************************************************************************************************
+
+22-A.
+ALGORITHM:
+->Initialize a variable count to keep track of the number of strings in words that contain pref as a prefix.
+->Iterate through the words array.
+->For each word, check if the word starts with the pref string using string slicing.
+->If the word starts with pref, increment the count variable.
+->Return the final value of count.
+PROGRAM:
+class Solution:
+    class Solution:
+    def prefixCount(self, words: List[str], pref: str) -> int:
+        count = 0
+        for word in words:
+            if word.startswith(pref):
+                count += 1
+        return count
+
+******************************************************************************************************************
+
+22-B.
+ALGORITHM:
+->Create a dictionary anagram_dict to store the anagrams.
+->Iterate through the strs array.
+->For each string, sort its characters and use the sorted string as a key in anagram_dict. If the key doesn't exist, create a new list and add the original string to it. If the key exists, append the original string to the corresponding list.
+->Convert the values of anagram_dict to a list and return it.
+->Return the list of anagram groups.
+PROGRAM:
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        anagram_dict = {}
+        
+        for word in strs:
+            sorted_word = ''.join(sorted(word))
+            if sorted_word not in anagram_dict:
+                anagram_dict[sorted_word] = []
+            anagram_dict[sorted_word].append(word)
+        
+        return list(anagram_dict.values())
+
+******************************************************************************************************************
+
+23-A.
+ALGORITHM:
+->Create two sets, row_set and col_set, to store the rows and columns that contain a 0.
+->Iterate through the matrix and for each cell, if the value is 0, add the current row and column indices to row_set and col_set, respectively.
+->Iterate through the matrix again and for each cell, if the row index is in row_set or the column index is in col_set, set the value to 0.
+->Update the original matrix in-place with the modified values.
+->Return the modified matrix.
+PROGRAM:
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        m, n = len(matrix), len(matrix[0])
+        row_set, col_set = set(), set()
+        
+        # Step 1: Iterate through the matrix and store the rows and columns that contain a 0
+        for i in range(m):
+            for j in range(n):
+                if matrix[i][j] == 0:
+                    row_set.add(i)
+                    col_set.add(j)
+        
+        # Step 2: Iterate through the matrix again and set the values to 0 based on the stored rows and columns
+        for i in range(m):
+            for j in range(n):
+                if i in row_set or j in col_set:
+                    matrix[i][j] = 0
+
+******************************************************************************************************************
+
+23-B.
+ALGORITHM:
+->Initialize a variable count to keep track of the number of good triplets.
+->Iterate through the nums1 array from index 0 to n-3, where n is the length of the arrays.
+->For each index i, check if the values at indices i, i+1, and i+2 in nums1 and nums2 are in increasing order.
+->If the values are in increasing order in both arrays, increment the count variable.
+->Return the final value of count.
+PROGRAM:
+class Solution:
+    def countGoodTriplets(self, nums1: List[int], nums2: List[int], n: int) -> int:
+        count = 0
+        for i in range(n-2):
+            pos1_x, pos1_y, pos1_z = nums1.index(i), nums1.index(i+1), nums1.index(i+2)
+            pos2_x, pos2_y, pos2_z = nums2.index(i), nums2.index(i+1), nums2.index(i+2)
+            if pos1_x < pos1_y < pos1_z and pos2_x < pos2_y < pos2_z:
+                count += 1
+        return count
+
+******************************************************************************************************************
+
+24-A.
+ALGORITHM:
+->Create a set set1 from the nums1 array to store unique elements.
+->Create an empty list result to store the intersection.
+->Iterate through the nums2 array and check if each element is present in the set1.
+->If an element is present in set1, add it to the result list and remove it from set1.
+->Return the result list.
+PROGRAM:
+class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        set1 = set(nums1)
+        result = []
+        
+        for num in nums2:
+            if num in set1:
+                result.append(num)
+                set1.remove(num)
+        
+        return result
+
+******************************************************************************************************************
+
+24-B.
+ALGORITHM:
+->Use the Quick Select algorithm to find the (n-k+1)th smallest element, where n is the length of the nums array.
+->Partition the array around a pivot element and recursively search the appropriate half based on the pivot's position.
+->If the pivot's position is equal to n-k, return the pivot element as the kth largest element.
+->If the pivot's position is greater than n-k, recursively search the left half of the pivot.
+->If the pivot's position is less than n-k, recursively search the right half of the pivot.
+PROGRAM:
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        n = len(nums)
+        target = n - k
+        
+        def partition(left, right):
+            pivot = nums[right]
+            store_index = left
+            for i in range(left, right):
+                if nums[i] < pivot:
+                    nums[store_index], nums[i] = nums[i], nums[store_index]
+                    store_index += 1
+            nums[store_index], nums[right] = nums[right], nums[store_index]
+            return store_index
+        
+        def select(left, right):
+            if left == right:
+                return nums[left]
+            
+            pivot_index = partition(left, right)
+            if pivot_index == target:
+                return nums[pivot_index]
+            elif pivot_index < target:
+                return select(pivot_index + 1, right)
+            else:
+                return select(left, pivot_index - 1)
+        
+        return select(0, n - 1)
+
+******************************************************************************************************************
+
+25-A.
+ALGORITHM:
+->Initialize a variable count to keep track of the number of good strings.
+->Iterate through all possible strings of length n that are lexicographically between s1 and s2.
+->For each string, check if it contains the evil substring using the in operator.
+->If the string does not contain the evil substring, increment the count variable.
+->Return the final value of count modulo 10^9 + 7.
+PROGRAM:
+
+class Solution:
+    def findGoodStrings(self, n: int, s1: str, s2: str, evil: str) -> int:
+        MOD = 10**9 + 7
+        
+        def dfs(i, s1_prefix, s2_prefix):
+            if i == n:
+                return 1
+            
+            count = 0
+            for c in range(ord('a'), ord('z')+1):
+                char = chr(c)
+                new_s1_prefix = s1_prefix + char
+                new_s2_prefix = s2_prefix + char
+                
+                if new_s1_prefix < s1:
+                    continue
+                if new_s2_prefix > s2:
+                    break
+                if evil in new_s1_prefix + new_s2_prefix:
+                    continue
+                
+                count += dfs(i+1, new_s1_prefix, new_s2_prefix)
+                count %= MOD
+            
+            return count
+        
+        return dfs(0, "", "")
+
+******************************************************************************************************************
+
+25-B.
+ALGORITHM:
+->Initialize a variable count to 0 and a variable candidate to 0.
+->Iterate through the nums array:
+If count is 0, set candidate to the current element.
+If the current element is equal to candidate, increment count by 1.
+If the current element is not equal to candidate, decrement count by 1.
+->Iterate through the nums array again and count the occurrences of candidate.
+If the count of candidate is greater than n // 2, return candidate as the majority element.
+->If the count of candidate is not greater than n // 2, return None (or raise an exception) as there is no majority element.
+PROGRAM:
+def majorityElement(nums):
+    count = 0
+    candidate = 0
+
+    # Step 1: Find the candidate for the majority element
+    for num in nums:
+        if count == 0:
+            candidate = num
+        count += (1 if num == candidate else -1)
+
+    # Step 2: Verify that the candidate is indeed the majority element
+    count = 0
+    for num in nums:
+        if num == candidate:
+            count += 1
+    if count > len(nums) // 2:
+        return candidate
+    else:
+        return None
+
+******************************************************************************************************************
+
+26-A.
+ALGORITHM:
+->Determine the dimensions of the input matrix.
+->Create a new matrix with the dimensions swapped (rows become columns, and columns become rows).
+->Iterate through the input matrix and assign the values to the corresponding positions in the new matrix.
+->Return the new matrix.
+PROGRAM:
+def transpose(matrix):
+    # Step 1: Determine the dimensions of the input matrix
+    rows, cols = len(matrix), len(matrix[0])
+
+    # Step 2: Create a new matrix with the dimensions swapped
+    transposed = [[0 for _ in range(rows)] for _ in range(cols)]
+
+    # Step 3: Iterate through the input matrix and assign the values to the new matrix
+    for i in range(rows):
+        for j in range(cols):
+            transposed[j][i] = matrix[i][j]
+
+    # Step 4: Return the new matrix
+    return transposed
+
+******************************************************************************************************************
+
+26-B.
+ALGORITHM:
+->Determine the dimensions of the input matrix.
+->Create a new matrix with the dimensions swapped (rows become columns, and columns become rows).
+->Iterate through the input matrix and assign the values to the corresponding positions in the new matrix.
+->Return the new matrix.
+PROGRAM:
+def transpose(matrix):
+    # Step 1: Determine the dimensions of the input matrix
+    rows, cols = len(matrix), len(matrix[0])
+
+    # Step 2: Create a new matrix with the dimensions swapped
+    transposed = [[0 for _ in range(rows)] for _ in range(cols)]
+
+    # Step 3: Iterate through the input matrix and assign the values to the new matrix
+    for i in range(rows):
+        for j in range(cols):
+            transposed[j][i] = matrix[i][j]
+
+    # Step 4: Return the new matrix
+    return transposed
+
+******************************************************************************************************************
+
+27-A.
+ALGORITHM:
+->Initialize variables digit_count to 0 and start to 1.
+->Iterate through the digit ranges (1-digit numbers, 2-digit numbers, 3-digit numbers, etc.) until the digit_count is greater than or equal to n.
+For each digit range, calculate the number of digits in that range and the starting number of that range.
+->Update digit_count by adding the number of digits in the current range.
+Update start by multiplying it by 10.
+Calculate the number of digits in the current range that n belongs to.
+Calculate the number that n belongs to by adding (n - digit_count - 1) // digits to start.
+->Return the digit at the position (n - digit_count - 1) % digits of the number calculated in step 4.
+PROGRAM:
+def findNthDigit(n):
+    digit_count = 0
+    start = 1
+
+    # Step 1: Iterate through the digit ranges
+    while digit_count + 9 * start * (len(str(start))) < n:
+        digit_count += 9 * start * (len(str(start)))
+        start *= 10
+
+    # Step 2: Calculate the number that n belongs to
+    n -= digit_count
+    digits = len(str(start))
+    number = start + (n - 1) // digits
+
+    # Step 3: Return the nth digit
+    return int(str(number)[(n - 1) % digits]) 
+
+******************************************************************************************************************
+
+27-B.
+ALGORITHM:
+->Initialize variables max_length to 0, max_start to 0, and seen to an empty set.
+->Iterate through the string s with a sliding window approach:
+If the current character is not in seen, add it to seen and update the window size.
+If the current character is in seen, check if the current window size is greater than max_length. If so, update max_length and max_start.
+If the current character is in seen and the corresponding uppercase/lowercase character is not in seen, move the left pointer of the window to the right until the corresponding character is found.
+After the loop, check if max_length is greater than 0. If so, return the substring of s from max_start to max_start + max_length.
+-?If max_length is 0, return an empty string.
+PROGRAM:
+def longestNiceSubstring(s):
+    max_length = 0
+    max_start = 0
+    seen = set()
+
+    for i in range(len(s)):
+        seen.add(s[i])
+        if len(seen) > max_length:
+            max_length = len(seen)
+            max_start = i - max_length + 1
+        elif len(seen) == max_length:
+            while s[i] in seen and (s[i].lower() not in seen or s[i].upper() not in seen):
+                seen.remove(s[i - max_length])
+                max_length -= 1
+                max_start += 1
+
+    return s[max_start:max_start + max_length] if max_length > 0 else ""
+
+******************************************************************************************************************
+
+28-A.
+ALGORITHM:
+->Split the sentence into a list of words.
+->Iterate through the list of words and check if each word starts with the searchWord.
+->If a word starts with searchWord, return the index of that word (1-indexed).
+->If no word starts with searchWord, return -1.
+PROGRAM:
+def isPrefixOfWord(sentence, searchWord):
+    words = sentence.split()
+    for i, word in enumerate(words):
+        if word.startswith(searchWord):
+            return i + 1
+    return -1
+
+******************************************************************************************************************
+
+28-B.
+ALGORITHM:
+->Check if the index difference is 0. If it is, return False because it's impossible to find a pair that satisfies the condition.
+->Iterate through the array using a for loop. For each index i, we'll check for pairs within the range [max(0, i - indexDiff), min(len(nums), i + indexDiff + 1)].
+->For each index j in the range, check if i != j and abs(nums[i] - nums[j]) <= valueDiff. If both conditions are true, return True because we found a pair that satisfies the requirements.
+If no pair is found after checking all possible combinations, return False.
+->The time complexity of this solution is O(n * k), where n is the length of the input array nums and k is the value of indexDiff. This is because we iterate through the array once and for each index, we check at most 2 * indexDiff + 1 elements.
+PROGRAM:
+def containsNearbyAlmostDuplicate(nums, indexDiff, valueDiff):
+    if indexDiff == 0:
+        return False
+    
+    for i in range(len(nums)):
+        for j in range(max(0, i - indexDiff), min(len(nums), i + indexDiff + 1)):
+            if i != j and abs(nums[i] - nums[j]) <= valueDiff:
+                return True
+    
+    return False
+
+******************************************************************************************************************
+
+29-A.
+ALGORITHM:
+->Check the length of the input array nums. If the length is 0 or 1, return the length as the minimum length.
+->Initialize two pointers, left and right, to the start and end of the array, respectively.
+->Iterate through the array using the left and right pointers. At each iteration, check if nums[left] < nums[right]. If true, remove the elements at indices left and right from the array, update the length n, and decrement right by 1. If false, increment left by 1.
+->Repeat step 3 until left is no longer less than right.
+->Return the final length n as the minimum length of the array after applying the operation zero or more times.
+PROGRAM:
+def minLength(nums):
+    n = len(nums)
+    if n <= 1:
+        return n
+    
+    left, right = 0, n - 1
+    
+    while left < right:
+        if nums[left] < nums[right]:
+            nums.pop(right)
+            nums.pop(left)
+            n -= 2
+            right -= 1
+        else:
+            left += 1
+    
+    return n
+
+******************************************************************************************************************
+
+29-B.
+ALGORITHM:
+->Check if the input array nums is empty. If it is, return None as there is no tree to construct.
+->Find the middle index of the array. This will be the root of the binary search tree.
+Create a new TreeNode with the value at the middle index. This will be the root of the current subtree.
+Recursively call the sortedArrayToBST function on the left and right halves of the array. The left half will become the left subtree, and the right half will become the right subtree.
+->Return the root of the current subtree. The final result will be the root of the entire height-balanced binary search tree.
+PROGRAM:
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def sortedArrayToBST(nums):
+    if not nums:
+        return None
+    
+    mid = len(nums) // 2
+    root = TreeNode(nums[mid])
+    root.left = sortedArrayToBST(nums[:mid])
+    root.right = sortedArrayToBST(nums[mid+1:])
+    
+    return root
+
+******************************************************************************************************************
+
+30-A.
+ALGORITHM:
+->Initialize an empty list result to store the substrings.
+Create a set word_set from the input list words. This will allow for efficient lookup of substrings.
+->Iterate through each word in the words list. For each word, iterate through all possible substrings (excluding the entire word) using a for loop from index 1 to the length of the word minus 1.
+Check if the current substring (either the prefix or suffix) is present in the word_set. If a substring is found, append the word to the result list and break out of the inner loop.
+->After checking all words, return the result list containing the substrings.
+PROGRAM:
+def stringMatching(words):
+    result = []
+    word_set = set(words)
+    
+    for word in words:
+        for i in range(1, len(word)):
+            if word[:i] in word_set or word[i:] in word_set:
+                result.append(word)
+                break
+    
+    return result
+
+******************************************************************************************************************
+
+30-B.
+ALGORITHM:
+Sort the input array nums in ascending order.
+Find the middle index of the sorted array. If the length of the array is odd, the middle index is (n + 1) // 2, otherwise, it's n // 2.
+Rearrange the elements in the array using slicing. The elements from the first half of the sorted array (from the beginning to the middle index) are placed in the even-indexed positions, and the elements from the second half of the sorted array (from the middle index to the end) are placed in the odd-indexed positions.
+Reverse the order of the elements in the even-indexed positions and the odd-indexed positions. This ensures that the final arrangement satisfies the condition nums < nums > nums < nums....
+Return the modified nums array.
+PROGRAM:
+def wiggleSort(nums):
+    nums.sort()
+    n = len(nums)
+    mid = (n + 1) // 2
+    nums[::2], nums[1::2] = nums[:mid][::-1], nums[mid:][::-1]
+    return nums
