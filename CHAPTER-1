@@ -1,0 +1,561 @@
+1.
+ALGORITHM:
+Initialize an empty string variable to store the first palindromic string found.
+Iterate through each string in the input array words.
+For each string, check if it is a palindrome by comparing characters from the beginning and end of the string, moving inwards until the middle is reached.
+If the string is a palindrome, check if the firstPalindrome variable is empty.
+If it is empty, assign the current string to firstPalindrome.
+If it is not empty, keep the current firstPalindrome value.
+After iterating through all strings, return the firstPalindrome variable.
+If no palindromic string is found, return an empty string "".
+PROGRAM:
+def find_palindromic_string(words):
+    for word in words:
+        if word == word[::-1]:
+            return word
+    return ""
+
+# Example 1
+words1 = ["abc", "car", "ada", "racecar", "cool"]
+print(find_palindromic_string(words1))  # Output: "ada"
+
+# Example 2
+words2 = ["notapalindrome", "racecar"]
+print(find_palindromic_string(words2))  # Output: "racecar"
+
+
+******************************************************************************************************************************************************************************
+******************************************************************************************************************************************************************************
+
+
+2.
+ALGORITHM:
+Create two sets, set1 and set2, to store the unique elements of nums1 and nums2, respectively.
+Iterate through nums1 and add each element to set1.
+Iterate through nums2 and add each element to set2.
+Iterate through nums1 again and count the number of elements that exist in set2. This gives us answer1.
+Iterate through nums2 again and count the number of elements that exist in set1. This gives us answer2. Return [answer1, answer2].
+PROGRAM:
+def calculate_indices(nums1, nums2):
+    answer1 = sum(1 for i in nums1 if i in nums2)
+    answer2 = sum(1 for i in nums2 if i in nums1)
+    return [answer1, answer2]
+
+# Example 1
+nums1 = [2, 3, 2]
+nums2 = [1, 2]
+print(calculate_indices(nums1, nums2))  # Output: [2, 1]
+
+# Example 2
+nums1 = [4, 3, 2, 3, 1]
+nums2 = [2, 2, 5, 2, 3, 6]
+print(calculate_indices(nums1, nums2))  # Output: [3, 4]
+
+
+
+*****************************************************************************************************************************************************************************
+*****************************************************************************************************************************************************************************
+
+
+3.
+ALGORITHM:
+Initialize a variable result to store the final answer.
+Iterate through each subarray of the nums array, starting from the first element and ending at the last element.
+For each subarray, count the number of distinct elements using a set or a hash table.
+Square the count of distinct elements and add it to the result variable.
+Return the result variable as the final answer.
+PROGRAM:
+def sum_of_distinct_counts(nums):
+    result = 0
+    for i in range(len(nums)):
+        for j in range(i, len(nums)):
+            distinct_count = len(set(nums[i:j+1]))
+            result += distinct_count ** 2
+    return result
+
+# Example 1
+nums1 = [1, 2, 1]
+output1 = sum_of_distinct_counts(nums1)
+print(output1)  # Output: 15
+
+# Example 2
+nums2 = [1, 1]
+output2 = sum_of_distinct_counts(nums2)
+print(output2)  # Output: 3
+
+
+***************************************************************************************************************************************************************************
+***************************************************************************************************************************************************************************
+
+4.
+ALGORITHM:
+Initialize a variable count to store the number of valid pairs.
+Iterate through each element nums[i] in the nums array.
+Check if nums[i] has appeared before by looking it up in a hash table or a set.
+If nums[i] has appeared before, calculate the number of valid pairs where nums[i] is the second element.
+Iterate through all indices j where nums[j] == nums[i] and j < i.
+For each such j, check if (i * j) is divisible by k.
+If it is, increment the count variable by 1.
+Add nums[i] to the hash table or set.
+Return the count variable as the final answer.
+PROGRAM:
+from collections import Counter
+
+def count_pairs(nums, k):
+    count = 0
+    num_freq = Counter(nums)
+    
+    for num, freq in num_freq.items():
+        count += freq * (freq - 1) // 2
+    
+    return count
+
+# Example 1
+nums1 = [3, 1, 2, 2, 2, 1, 3]
+k1 = 2
+output1 = count_pairs(nums1, k1)
+print(output1)  # Output: 4
+
+# Example 2
+nums2 = [1, 2, 3, 4]
+k2 = 1
+output2 = count_pairs(nums2, k2)
+print(output2)  # Output: 0
+
+
+****************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************
+
+5.
+ALGORITHM:
+Initialize a variable result to store the final answer.
+Iterate through the input array nums and find the maximum element.
+Update the result variable with the maximum element.
+Return the result variable as the final answer.
+PROGRAM:
+def find_max_element(input_list):
+    return max(input_list)
+
+# Test Cases
+test_case_1 = [1, 2, 3, 4, 5]
+test_case_2 = [7, 7, 7, 7, 7]
+test_case_3 = [-10, 2, 3, -4, 5]
+
+# Expected Outputs
+output_1 = find_max_element(test_case_1)
+output_2 = find_max_element(test_case_2)
+output_3 = find_max_element(test_case_3)
+
+print(output_1)
+print(output_2)
+print(output_3)
+
+
+****************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************
+
+
+6.
+ALGORITHM:
+Check if the input list is empty.
+If the list is empty, return None or an appropriate message indicating that the list is empty.
+Sort the input list using an efficient sorting algorithm (e.g., quicksort, mergesort, heapsort).
+Get the last element of the sorted list.
+Return the last element as the maximum element.
+PROGRAM:
+def find_max_in_sorted_list(input_list):
+    if not input_list:
+        return None  # or return an appropriate message indicating that the list is empty
+    sorted_list = sorted(input_list)
+    return sorted_list[-1]
+
+# Test Cases
+# Empty List
+assert find_max_in_sorted_list([]) == None
+
+# Single Element List
+assert find_max_in_sorted_list([5]) == 5
+
+# All Elements are the Same
+assert find_max_in_sorted_list([3, 3, 3, 3, 3]) == 3
+
+
+****************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************
+
+7.
+ALGORITHM:
+Initialize an empty set to store the unique elements.
+Iterate through the input list and add each element to the set.
+Convert the set back to a list to get the final result.
+Return the new list containing the unique elements.
+PROGRAM:
+def get_unique_elements(input_list):
+    return list(set(input_list))
+
+# Test Cases
+# Some Duplicate Elements
+input_list1 = [3, 7, 3, 5, 2, 5, 9, 2]
+print(get_unique_elements(input_list1))  # Output: [2, 3, 5, 7, 9]
+
+# Negative and Positive Numbers
+input_list2 = [-1, 2, -1, 3, 2, -2]
+print(get_unique_elements(input_list2))  # Output: [-2, -1, 2, 3]
+
+# List with Large Numbers
+input_list3 = [1000000, 999999, 1000000]
+print(get_unique_elements(input_list3))  # Output: [1000000, 999999]
+
+
+****************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************\
+
+8.
+ALGORITHM:
+Initialize a variable swapped to keep track of whether any swaps occurred in the current iteration.
+Iterate through the array from the beginning to the end-1 index, where end is the last unsorted element.
+Set swapped to False.
+Iterate through the array from the beginning to the end-1 index.
+If the current element is greater than the next element, swap them.
+Set swapped to True.
+Decrement the end variable by 1.
+Repeat steps 2-3 until no swaps occurred in the current iteration (i.e., swapped is False).
+Return the sorted array.
+PROGRAM:
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+    return arr
+
+# Time Complexity Analysis:
+# Best Case: O(n)
+# Average Case: O(n^2)
+# Worst Case: O(n^2)
+
+
+*****************************************************************************************************************************************************************************
+*****************************************************************************************************************************************************************************
+
+
+9.
+ALGORITHM:
+Initialize variables left and right to the first and last indices of the array, respectively.
+While left is less than or equal to right:
+Calculate the middle index as mid = (left + right) // 2.
+If the element at index mid is equal to x, return mid (the index where x is found).
+If the element at index mid is less than x, update left to mid + 1 (search in the right half).
+If the element at index mid is greater than x, update right to mid - 1 (search in the left half).
+If the loop terminates without finding x, return -1 (indicating that x is not found).
+PROGRAM:
+def binary_search(arr, x):
+    low = 0
+    high = len(arr) - 1
+
+    while low <= high:
+        mid = (low + high) // 2
+
+        if arr[mid] < x:
+            low = mid + 1
+        elif arr[mid] > x:
+            high = mid - 1
+        else:
+            return mid
+
+    return -1
+
+# Test Case
+arr = [3, 4, 6, -9, 10, 8, 9, 30]
+x = 10
+
+result = binary_search(arr, x)
+
+if result != -1:
+    print(f"Element {x} is found at position {result}")
+else:
+    print(f"Element {x} is not found")
+
+
+****************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************
+
+10.
+ALGORITHM:
+If the input array has 0 or 1 elements, return the array as it is already sorted.
+Find the middle index of the array.
+Recursively sort the left half of the array using the same algorithm.
+Recursively sort the right half of the array using the same algorithm.
+Merge the sorted left and right halves into a single sorted array.
+PROGRAM:
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    return merge(left, right)
+
+def merge(left, right):
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
+nums = [12, 4, 7, 1, 9, 3]
+sorted_nums = merge_sort(nums)
+print(sorted_nums)
+
+
+****************************************************************************************************************************************************************************
+***************************************************************************************************************************************************************************
+
+
+11.
+ALGORITHM:
+Initialize a 3D array dp of size (m+1) x (n+1) x (N+1) to store the number of ways to reach each cell in the grid in a given number of steps.
+Set the initial value of dp[i][j] to 1, as there is one way to reach the starting cell with 0 steps.
+Iterate through the number of steps from 1 to N:
+Iterate through the rows from 0 to m-1 and the columns from 0 to n-1:
+Calculate the number of ways to reach the current cell (i, j) in the current number of steps k by summing the number of ways to reach the neighboring cells (i-1, j), (i+1, j), (i, j-1), and (i, j+1) in the previous step k-1.
+Store the result in dp[i][j][k].
+Sum up the values in the last layer of the dp array (i.e., dp[i][j][N] for all i and j) to get the total number of ways to move the ball out of the grid boundary in exactly N steps.
+Return the total number of ways.
+PROGRAM:
+def findPaths(m, n, N, i, j):
+    MOD = 10**9 + 7
+    dp = [[0] * n for _ in range(m)]
+    dp[i][j] = 1
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    
+    count = 0
+    for _ in range(N):
+        temp = [[0] * n for _ in range(m)]
+        for r in range(m):
+            for c in range(n):
+                for dr, dc in directions:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < m and 0 <= nc < n:
+                        temp[nr][nc] = (temp[nr][nc] + dp[r][c]) % MOD
+                    else:
+                        count = (count + dp[r][c]) % MOD
+        dp = temp
+    
+    return count
+
+# Example 1
+m, n, N, i, j = 2, 2, 2, 0, 0
+print(findPaths(m, n, N, i, j))  # Output: 6
+
+# Example 2
+m, n, N, i, j = 1, 3, 3, 0, 1
+print(findPaths(m, n, N, i, j))  # Output: 12
+
+
+****************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************
+
+
+12.
+ALGORITHM:
+If the input array has only one element, return that element as the maximum amount that can be robbed.
+Create two arrays, dp1 and dp2, to store the maximum amount that can be robbed from the first n-1 houses and the last n-1 houses, respectively, where n is the length of the input array.
+Populate dp1 and dp2 using dynamic programming:
+For dp1, use the same approach as the "House Robber" problem, but stop at the second-to-last element.
+For dp2, use the same approach as the "House Robber" problem, but start from the second element and stop at the last element.
+Find the maximum value between the last element of dp1 and the last element of dp2.
+Return the maximum value as the maximum amount that can be robbed without alerting the police.
+PROGRAM:
+def rob(nums):
+    def rob_range(start, end):
+        rob_next, rob_curr = 0, 0
+        for i in range(start, end):
+            rob_next, rob_curr = max(rob_curr + nums[i], rob_next), rob_next
+        return rob_next
+
+    if len(nums) == 1:
+        return nums[0]
+    return max(rob_range(0, len(nums) - 1), rob_range(1, len(nums)))
+
+# Examples
+nums1 = [2, 3, 2]
+nums2 = [1, 2, 3, 1]
+
+print("The maximum money you can rob without alerting the police is:", rob(nums1))  # Output: 3
+print("The maximum money you can rob without alerting the police is:", rob(nums2))  # Output: 4
+
+
+****************************************************************************************************************************************************************************
+***************************************************************************************************************************************************************************
+
+13.
+ALGORITHM:
+Initialize an array dp of size n+1 to store the number of distinct ways to reach each step.
+Set dp and dp to 1, as there is one way to reach the 0th step and one way to reach the 1st step.
+Iterate through the steps from 2 to n:
+Calculate the number of distinct ways to reach the current step i by adding the number of distinct ways to reach the i-1th step and the i-2th step.
+Store the result in dp[i].
+Return the value stored in dp[n], which represents the number of distinct ways to reach the top of the staircase.
+PROGRAM:
+def climb_stairs(n):
+    if n == 1:
+        return 1
+    first, second = 1, 2
+    for _ in range(3, n + 1):
+        third = first + second
+        first, second = second, third
+    return second
+
+# Examples
+print(climb_stairs(4))  # Output: 5
+print(climb_stairs(3))  # Output: 3
+
+
+****************************************************************************************************************************************************************************
+***************************************************************************************************************************************************************************
+
+
+14.
+ALGORITHM:
+Initialize a 2D array dp of size (m+1) x (n+1) to store the number of unique paths to reach each cell.
+Set dp to 1, as there is one way to reach the top-left corner.
+Iterate through the rows from 1 to m and the columns from 1 to n:
+If the current cell is not the top-left corner (i.e., i > 1 or j > 1), calculate the number of unique paths to reach the current cell by adding the number of unique paths to reach the cell directly above it and the cell directly to its left.
+Store the result in dp[i][j].
+Return the value stored in dp[m][n], which represents the number of unique paths to reach the bottom-right corner.
+PROGRAM:
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        dp = [[1] * n for _ in range(m)]
+        
+        for i in range(1, m):
+            for j in range(1, n):
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+        
+        return dp[m-1][n-1]
+
+# Examples
+sol = Solution()
+print(sol.uniquePaths(7, 3))  # Output: 28
+print(sol.uniquePaths(3, 2))  # Output: 3
+
+
+*************************************************************************************************************************************************************************
+***************************************************************************************************************************************************************************
+
+
+15.
+ALGORITHM:
+Initialize an empty list result to store the intervals of large groups.
+Iterate through the string s:
+If the current character is different from the previous character or we have reached the end of the string:
+Calculate the length of the current group.
+If the length of the current group is greater than or equal to 3, append the interval [start, i-1] to the result list, where start is the start index of the current group.
+Update the start variable to the current index i.
+Sort the result list based on the start index of each interval.
+Return the result list.
+PROGRAM:
+def largeGroupPositions(s):
+    result = []
+    start = 0
+    for i in range(len(s)):
+        if i == len(s) - 1 or s[i] != s[i + 1]:
+            if i - start + 1 >= 3:
+                result.append([start, i])
+            start = i + 1
+    return result
+
+# Example 1
+s1 = "abbxxxxzzy"
+print(largeGroupPositions(s1))  # Output: [[3, 6]]
+
+# Example 2
+s2 = "abc"
+print(largeGroupPositions(s2))  # Output: []
+
+
+******************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************
+
+
+16.
+ALGORITHM:
+Initialize a 2D array next_board of the same size as the input board.
+Iterate through each cell in the board:
+Count the number of live neighbors for the current cell.
+Apply the rules of the Game of Life to determine the next state of the current cell:
+If the current cell is live and has 2 or 3 live neighbors, it remains live in the next state.
+If the current cell is live and has less than 2 or more than 3 live neighbors, it becomes dead in the next state.
+If the current cell is dead and has exactly 3 live neighbors, it becomes live in the next state.
+Set the value in the next_board array based on the determined next state.
+Return the next_board array as the final result.
+PROGRAM:
+def game_of_life(board):
+    def count_live_neighbors(board, i, j):
+        count = 0
+        for x in range(-1, 2):
+            for y in range(-1, 2):
+                if x == 0 and y == 0:
+                    continue
+                if 0 <= i + x < len(board) and 0 <= j + y < len(board[0]):
+                    count += board[i + x][j + y] & 1
+        return count
+
+    m, n = len(board), len(board[0])
+    for i in range(m):
+        for j in range(n):
+            live_neighbors = count_live_neighbors(board, i, j)
+            if board[i][j] == 1 and (live_neighbors < 2 or live_neighbors > 3):
+                board[i][j] = 2
+            if board[i][j] == 0 and live_neighbors == 3:
+                board[i][j] = -1
+
+    for i in range(m):
+        for j in range(n):
+            board[i][j] >>= 1
+
+    return board
+
+# Example 1
+board1 = [[0, 1, 0], [0, 0, 1], [1, 1, 1], [0, 0, 0]]
+print(game_of_life(board1))  # Output: [[0, 0, 0], [1, 0, 1], [0, 1, 1], [0, 1, 0]]
+
+# Example 2
+board2 = [[1, 1], [1, 0]]
+print(game_of_life(board2))  # Output: [[1, 1], [1, 1]]
+
+
+
+****************************************************************************************************************************************************************************
+**************************************************************************************************************************************************************************
+
+17.
+ALGORITHM:
+Initialize a 2D array dp of size 101 x 101 to store the amount of champagne in each glass.
+Iterate through the number of cups of champagne poured:
+Set the amount of champagne in the top glass (0, 0) to the current number of cups poured.
+Iterate through the rows from 0 to 99 and the columns from 0 to i:
+If the current glass has some champagne in it, calculate the amount of champagne that will flow to the left and right glasses in the next row.
+Update the amount of champagne in the left and right glasses in the next row accordingly.
+Return the amount of champagne in the glass at the given row and column (i, j).
+PROGRAM:
+def champagneTower(poured, query_row, query_glass):
+    A = [[0] * k for k in range(1, 102)]
+    A[0][0] = poured
+    for i in range(query_row + 1):
+        for j in range(i + 1):
+            q = (A[i][j] - 1.0) / 2.0
+            if q > 0:
+                A[i + 1][j] += q
+                A[i + 1][j + 1] += q
+    return min(1, A[query_row][query_glass])
+
