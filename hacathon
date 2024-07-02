@@ -1,0 +1,556 @@
+1.
+def greedyColoring(adj, V):
+    result = [-1] * V  # Initialize all vertices as unassigned
+    result[0] = 0      # Assign the first color to the first vertex
+
+    # A temporary array to store the available colors. 
+    # True value of available[cr] would mean that the color cr is assigned to one of its adjacent vertices
+    available = [False] * V 
+
+    # Assign colors to remaining V-1 vertices
+    for u in range(1, V):
+        # Process all adjacent vertices and flag their colors as unavailable
+        for i in adj[u]:
+            if (result[i] != -1):
+                available[result[i]] = True
+
+        # Find the first available color
+        cr = 0
+        while cr < V:
+            if (available[cr] == False):
+                break
+            cr += 1
+
+        # Assign the found color
+        result[u] = cr
+
+        # Reset the values back to false for the next iteration
+        for i in adj[u]:
+            if (result[i] != -1):
+                available[result[i]] = False
+
+    # Print the result
+    for u in range(V):
+        print("Vertex", u, " ---> Color", result[u])
+
+# Example usage
+g1 = [[] for i in range(5)]
+g1 = addEdge(g1, 0, 1) 
+g1 = addEdge(g1, 0, 2)
+g1 = addEdge(g1, 1, 2)
+g1 = addEdge(g1, 1, 3)
+g1 = addEdge(g1, 2, 3)
+g1 = addEdge(g1, 3, 4)
+
+print("Coloring of graph 1")
+greedyColoring(g1, 5)
+
+
+*******************
+
+
+2.
+def find_max_min(arr):
+    """
+    Finds the maximum and minimum elements in the given array.
+    
+    Args:
+        arr (list): The input array.
+        
+    Returns:
+        tuple: A tuple containing the maximum and minimum elements.
+    """
+    if not arr:
+        return None, None  # Return None if the array is empty
+    
+    max_val = arr[0]
+    min_val = arr[0]
+    
+    for num in arr[1:]:
+        if num > max_val:
+            max_val = num
+        elif num < min_val:
+            min_val = num
+    
+    return max_val, min_val
+
+# Example usage
+my_array = [5, 2, 8, 1, 9, 3]
+maximum, minimum = find_max_min(my_array)
+print(f"Maximum: {maximum}")
+print(f"Minimum: {minimum}")
+
+
+**********************
+
+
+
+3.
+def rob_circular(nums):
+    """
+    Finds the maximum amount of money that can be robbed from houses arranged in a circle.
+    
+    Args:
+        nums (list): A list of integers representing the amount of money in each house.
+        
+    Returns:
+        int: The maximum amount of money that can be robbed.
+    """
+    if not nums:
+        return 0
+    
+    if len(nums) == 1:
+        return nums[0]
+    
+    # Solve the problem for the first n-1 houses
+    def rob_linear(nums):
+        dp = [0] * (len(nums) + 1)
+        dp[1] = nums[0]
+        
+        for i in range(2, len(nums) + 1):
+            dp[i] = max(dp[i-1], dp[i-2] + nums[i-1])
+        
+        return dp[-1]
+    
+    # Solve the problem for the last n-1 houses
+    def rob_linear_without_first(nums):
+        if len(nums) == 1:
+            return nums[0]
+        
+        dp = [0] * (len(nums) + 1)
+        dp[1] = nums[1]
+        
+        for i in range(2, len(nums) + 1):
+            dp[i] = max(dp[i-1], dp[i-2] + nums[i-1])
+        
+        return dp[-1]
+    
+    # Return the maximum of the two solutions
+    return max(rob_linear(nums[:-1]), rob_linear_without_first(nums[1:]))
+
+
+
+
+
+
+************************
+
+
+
+
+4.
+import sys
+
+class Graph:
+    def __init__(self, vertices):
+        self.vertices = vertices
+        self.graph = [[0 for column in range(vertices)] for row in range(vertices)]
+
+    def dijkstra(self, source):
+        dist = [sys.maxsize] * self.vertices
+        dist[source] = 0
+        visited = [False] * self.vertices
+
+        for _ in range(self.vertices):
+            u = self.min_distance(dist, visited)
+            visited[u] = True
+
+            for v in range(self.vertices):
+                if self.graph[u][v] > 0 and not visited[v] and dist[v] > dist[u] + self.graph[u][v]:
+                    dist[v] = dist[u] + self.graph[u][v]
+
+        return dist
+
+    def min_distance(self, dist, visited):
+        min_val = sys.maxsize
+        min_index = -1
+
+        for v in range(self.vertices):
+            if not visited[v] and dist[v] < min_val:
+                min_val = dist[v]
+                min_index = v
+
+        return min_index
+
+# Example usage
+g = Graph(9)
+g.graph = [[0, 4, 0, 0, 0, 0, 0, 8, 0],
+           [4, 0, 8, 0, 0, 0, 0, 11, 0],
+           [0, 8, 0, 7, 0, 4, 0, 0, 2],
+           [0, 0, 7, 0, 9, 14, 0, 0, 0],
+           [0, 0, 0, 9, 0, 10, 0, 0, 0],
+           [0, 0, 4, 14, 10, 0, 2, 0, 0],
+           [0, 0, 0, 0, 0, 2, 0, 1, 6],
+           [8, 11, 0, 0, 0, 0, 1, 0, 7],
+           [0, 0, 2, 0, 0, 0, 6, 7, 0]]
+
+source = 0
+distances = g.dijkstra(source)
+
+print("Shortest distances from source vertex", source)
+for i in range(g.vertices):
+    print(f"Vertex {i}: {distances[i]}")
+
+
+
+****************************
+
+
+
+5.
+def selection_sort(arr):
+    """
+    Sorts the given array in ascending order using the Selection Sort algorithm.
+    
+    Args:
+        arr (list): The input array to be sorted.
+        
+    Returns:
+        list: The sorted array.
+    """
+    n = len(arr)
+    
+    # Traverse through the array
+    for i in range(n):
+        # Find the minimum element in the unsorted part of the array
+        min_idx = i
+        for j in range(i+1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        
+        # Swap the found minimum element with the first element
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    
+    return arr
+
+# Example usage
+unsorted_array = [64, 25, 12, 22, 11]
+sorted_array = selection_sort(unsorted_array)
+print("Sorted array:", sorted_array)
+
+
+
+*************************
+
+
+
+
+6.
+def findKthPositive(arr, k):
+    """
+    Finds the Kth positive integer that is missing from a sorted array of positive integers.
+    
+    Args:
+        arr (list): The sorted array of positive integers.
+        k (int): The value of k.
+        
+    Returns:
+        int: The Kth positive integer that is missing from the array.
+    """
+    missing_count = 0
+    num = 1
+    
+    while missing_count < k:
+        if num not in arr:
+            missing_count += 1
+        if missing_count == k:
+            return num
+        num += 1
+    
+    return -1  # If k is greater than the number
+
+
+
+
+
+
+**********************
+
+
+
+7.
+def binary_search(arr, target):
+    """
+    Performs binary search on the given sorted array to find the target element.
+    
+    Args:
+        arr (list): The sorted array to search.
+        target (int): The element to search for.
+        
+    Returns:
+        int: The index of the target element if found, otherwise -1.
+    """
+    left = 0
+    right = len(arr) - 1
+    
+    while left <= right:
+        mid = (left + right) // 2
+        
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return -1
+
+# Example usage
+sorted_array = [1, 3, 5, 7, 9, 11, 13]
+target = 7
+index = binary_search(sorted_array, target)
+if index == -1:
+    print(f"{target} not found in the array.")
+else:
+    print(f"{target} found at index {index}.")
+def binary_search(arr, target):
+    """
+    Performs binary search on the given sorted array to find the target element.
+    
+    Args:
+        arr (list): The sorted array to search.
+        target (int): The element to search for.
+        
+    Returns:
+        int: The index of the target element if found, otherwise
+
+
+
+
+**************************
+
+
+
+
+8.
+def combinationSum(candidates, target):
+    """
+    Finds all unique combinations of numbers in the candidates array that sum up to the target value.
+    
+    Args:
+        candidates (list): The array of distinct integers representing the available numbers.
+        target (int): The target sum.
+        
+    Returns:
+        list: A list of all unique combinations of numbers that sum up to the target value.
+    """
+    result = []
+    
+    def backtrack(start, combination, remaining_sum):
+        if remaining_sum == 0:
+            result.append(combination[:])
+            return
+        
+        if remaining_sum < 0:
+            return
+        
+        for i in range(start, len(candidates)):
+            combination.append(candidates[i])
+            backtrack(i, combination, remaining_sum - candidates[i])
+            combination.pop()
+    
+    backtrack(0, [], target)
+    return result
+
+# Example usage
+candidates = [2, 3, 6, 7]
+target = 7
+combinations = combinationSum(candidates, target)
+
+def merge_sort(arr):
+    """
+    Sorts the given array in ascending order using the Merge Sort algorithm.
+    
+    Args:
+        arr (list): The input array to be sorted.
+        
+    Returns:
+        list: The sorted array.
+    """
+    if len(arr) <= 1:
+        return arr
+    
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+    
+    left_half = merge_sort(left_half)
+    right_half = merge_sort(right_half)
+    
+    return merge(left_half, right_half)
+
+def merge(left, right):
+    """
+    Merges two sorted arrays into a single sorted array.
+    
+    Args:
+        left (list): The left sorted subarray.
+        right (list): The right sorted subarray.
+        
+    Returns:
+        list: The merged sorted array.
+    """
+    result = []
+    left_index = 0
+    right_index = 0
+    
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index] <= right[right_index]:
+            result.append(left[left_index])
+            left_index += 1
+        else:
+            result.append(right[right_index])
+            right_index += 1
+    
+    result += left[left_index:]
+    result += right[right_index:]
+    
+    return result
+
+# Example usage
+unsorted_array = [64, 25, 12, 22, 11]
+sorted_array = merge_sort(unsorted_array)
+print("Sorted array:", sorted_array)
+print("Combinations that sum up to the target:")
+for combination in combinations:
+    print(combination)
+
+
+
+
+********************
+
+
+
+9.
+
+def closest_pair(points):
+    """
+    Finds the closest pair of points using the divide and conquer approach.
+    
+    Args:
+        points (list): A list of (x, y) tuples representing the points.
+        
+    Returns:
+        tuple: A tuple containing the closest pair of points.
+    """
+    if len(points) <= 3:
+        return brute_force(points)
+    
+    mid = len(points) // 2
+    left_points = points[:mid]
+    right_points = points[mid:]
+    
+    left_min, left_pair = closest_pair(left_points)
+    right_min, right_pair = closest_pair(right_points)
+    
+    delta = min(left_min, right_min)
+    strip = []
+    
+    for point in points:
+        if abs(point[0] - points[mid][0]) < delta:
+            strip.append(point)
+    
+    strip.sort(key=lambda x: x[1])
+    strip_min = delta
+    strip_pair = None
+    
+    for i in range(len(strip)):
+        for j in range(i+1, min(i+7, len(strip))):
+            dist = distance(strip[i], strip[j])
+            if dist < strip_min:
+                strip_min = dist
+                strip_pair = (strip[i], strip[j])
+    
+    return min((left_min, left_pair), (right_min, right_pair), (strip_min, strip_pair), key=lambda x: x[0])
+
+def brute_force(points):
+    """
+    Finds the closest pair of points using the brute force approach.
+    
+    Args:
+        points (list): A list of (x, y) tuples representing the points.
+        
+    Returns:
+        tuple: A tuple containing the closest pair of points.
+    """
+    min_dist = float('inf')
+    min_pair = None
+    
+    for i in range(len(points)):
+        for j in range(i+1, len(points)):
+            dist = distance(points[i], points[j])
+            if dist < min_dist:
+                min_dist = dist
+                min_pair = (points[i], points[j])
+    
+    return min_dist, min_pair
+
+def distance(p1, p2):
+    """
+    Calculates the Euclidean distance between two points.
+    
+    Args:
+        p1 (tuple): A tuple (x, y) representing the first point.
+        p2 (tuple): A tuple (x, y) representing the second point.
+        
+    Returns:
+        float: The Euclidean distance between the two points.
+    """
+    return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
+
+# Example usage
+points = [(2, 3), (12, 30), (40, 50), (5, 1), (12, 10), (3, 4)]
+closest = closest_pair(points)
+print(f"The closest pair of points is: {closest[1]}")
+print(f"The distance between them is: {closest[0]:.2f}")
+def merge_sort(arr):
+    """
+    Sorts the given array in ascending order using the Merge Sort algorithm.
+    
+    Args:
+        arr (list): The input array to be sorted.
+        
+    Returns:
+        list: The sorted array.
+    """
+    if len(arr) <= 1:
+        return arr
+    
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+    
+    left_half = merge_sort(left_half)
+    right_half = merge
+
+
+
+
+
+***********************
+
+
+
+
+
+10.
+import math
+    """
+    Sorts the given array in ascending order using the Merge Sort algorithm.
+    
+    Args:
+        arr (list): The input array to be sorted.
+        
+    Returns:
+        list: The sorted array.
+    """
+    if len(arr) <= 1:
+        return arr
+    
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+    
+    left_half = merge_sort(left_half)
+    right_half = merge
